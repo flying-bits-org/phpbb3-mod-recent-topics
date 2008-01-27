@@ -1,0 +1,54 @@
+<!-- $Id: recent_topics_body.html 68 2008-01-06 01:03:56Z nickvergessen $ -->
+<!-- BEGIN recenttopicrow -->
+	<!-- IF not recenttopicrow.S_TOPIC_TYPE_SWITCH and not recenttopicrow.S_FIRST_ROW -->
+		</ul>
+		<span class="corners-bottom"><span></span></span></div>
+	</div>
+	<!-- ENDIF -->
+
+	<!-- IF recenttopicrow.S_FIRST_ROW or not recenttopicrow.S_TOPIC_TYPE_SWITCH -->
+		<div class="forumbg">
+		<div class="inner"><span class="corners-top"><span></span></span>
+		<ul class="topiclist">
+			<li class="header">
+				<dl class="icon">
+				<dt>{L_RECENT_TOPICS}</dt>
+					<dd class="posts">{L_REPLIES}</dd>
+					<dd class="views">{L_VIEWS}</dd>
+					<dd class="lastpost"><span>{L_LAST_POST}</span></dd>
+				</dl>
+			</li>
+		</ul>
+		<ul class="topiclist topics">
+	<!-- ENDIF -->
+	
+		<li class="row<!-- IF recenttopicrow.S_ROW_COUNT is even --> bg1<!-- ELSE --> bg2<!-- ENDIF -->">
+			<dl class="icon" style="background-image: url({recenttopicrow.TOPIC_FOLDER_IMG_SRC}); background-repeat: no-repeat;">
+				<dt style="<!-- IF recenttopicrow.TOPIC_ICON_IMG -->background-image: url({T_ICONS_PATH}{recenttopicrow.TOPIC_ICON_IMG}); background-repeat: no-repeat;<!-- ENDIF -->" title="{recenttopicrow.TOPIC_FOLDER_IMG_ALT}"><!-- IF recenttopicrow.S_UNREAD_TOPIC --><a href="{recenttopicrow.U_NEWEST_POST}">{NEWEST_POST_IMG}</a> <!-- ENDIF --><a href="{recenttopicrow.U_VIEW_TOPIC}" class="topictitle">{recenttopicrow.TOPIC_TITLE}</a><!-- IF U_VIEW_UNREAD_POST and not S_IS_BOT --> &bull; <a href="{U_VIEW_UNREAD_POST}">{L_VIEW_UNREAD_POST}</a> &bull; <!-- ENDIF -->
+					<!-- IF recenttopicrow.S_TOPIC_UNAPPROVED or recenttopicrow.S_POSTS_UNAPPROVED --><a href="{recenttopicrow.U_MCP_QUEUE}">{recenttopicrow.UNAPPROVED_IMG}</a> <!-- ENDIF -->
+					<!-- IF recenttopicrow.S_TOPIC_REPORTED --><a href="{recenttopicrow.U_MCP_REPORT}">{REPORTED_IMG}</a><!-- ENDIF --><br />
+					<!-- IF recenttopicrow.PAGINATION --><strong class="pagination"><span>{recenttopicrow.PAGINATION}</span></strong><!-- ENDIF -->
+					<!-- IF recenttopicrow.ATTACH_ICON_IMG -->{recenttopicrow.ATTACH_ICON_IMG} <!-- ENDIF -->{L_POST_BY_AUTHOR} {recenttopicrow.TOPIC_AUTHOR_FULL} {L_POSTED_ON_DATE} {recenttopicrow.FIRST_POST_TIME}
+					<!-- IF recenttopicrow.U_VIEW_FORUM and recenttopicrow.FORUM_NAME --><br />{L_IN} <a href="{recenttopicrow.U_VIEW_FORUM}" style="font-weight: bold;">{recenttopicrow.FORUM_NAME}</a><!-- ENDIF -->
+				</dt>
+				<dd class="posts">{recenttopicrow.REPLIES} <dfn>{L_REPLIES}</dfn></dd>
+				<dd class="views">{recenttopicrow.VIEWS} <dfn>{L_VIEWS}</dfn></dd>
+				<dd class="lastpost"><span><dfn>{L_LAST_POST} </dfn>{L_POST_BY_AUTHOR} {recenttopicrow.LAST_POST_AUTHOR_FULL}
+					<a href="{recenttopicrow.U_LAST_POST}">{LAST_POST_IMG}</a> <br />{L_POSTED_ON_DATE} {recenttopicrow.LAST_POST_TIME}</span>
+				</dd>
+			</dl>
+		</li>
+
+	<!-- IF recenttopicrow.S_LAST_ROW -->
+			</ul>
+		<span class="corners-bottom"><span></span></span></div>
+	</div>
+	<!-- ENDIF -->
+
+<!-- BEGINELSE -->
+	<div class="panel">
+		<div class="inner"><span class="corners-top"><span></span></span>
+		<strong>{L_NO_TOPICS}</strong>
+		<span class="corners-bottom"><span></span></span></div>
+	</div>
+<!-- END recenttopicrow -->

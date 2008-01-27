@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml-stylesheet type="text/xsl" href="modx.prosilver.en.xsl"?>
+<!-- $Id$ -->
+<!--For security purposes, please check: http://www.phpbb.com/mods/ for the latest version of this MOD. Although MODs are checked before being allowed in the MODs Database there is no guarantee that there are no security problems within the MOD. No support will be given for MODs not found within the MODs Database which can be found at http://www.phpbb.com/mods/-->
+<mod xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.phpbb.com/mods/xml/modx-1.0.xsd">
+  <header>
+    <license>http://opensource.org/licenses/gpl-license.php GNU General Public License v2</license>
+    <title lang="en-gb">NV recent topics</title>
+    <title lang="de">NV recent topics</title>
+    <description lang="en-gb">Adds a list with a number of recent topics to the index.php</description>
+    <description lang="de">Fügt eine Liste mit einer einstellbaren Anzahl aus Themen auf die index.php.</description>
+    <author-notes lang="en-gb">i hope you get it installed, otherwise you can ask for help on phpbb.de and phpbb.com</author-notes>
+    <author-notes lang="de">Ich hoffe ihr kommt mit dem MOD klar. Wenn nicht, könnt ihr auf phpbb.de oder phpbb.com eure Fragen stellen.</author-notes>
+    <author-group>
+      <author>
+        <realname>(N/A) / nick: clusedo</realname>
+        <email>nickvergessen@gmx.de</email>
+        <username>nickvergessen</username>
+        <homepage>http://mods.flying-bits.org/</homepage>
+        <contributions />
+      </author>
+    </author-group>
+    <mod-version>
+      <major>1</major>
+      <minor>0</minor>
+      <revision>0</revision>
+    </mod-version>
+    <installation>
+      <level>easy</level>
+      <time>300</time>
+      <target-version>
+        <target-primary>3.0.0</target-primary>
+        <target-major allow="exact">3</target-major>
+        <target-minor allow="exact">0</target-minor>
+      </target-version>
+    </installation>
+    <history>
+      <entry>
+        <date>2008-01-06</date>
+        <rev-version>
+          <major>1</major>
+          <minor>0</minor>
+          <revision>0</revision>
+        </rev-version>
+        <changelog lang="en-GB">
+          <change>finale version</change>
+          <change>little fix: "unread-image"</change>
+        </changelog>
+        <changelog lang="de">
+          <change>vorerst letzte Version</change>
+          <change>kleiner Fix: "ungelesen-Bildchen"</change>
+        </changelog>
+      </entry>
+    </history>
+    <meta name="generator" content="Phpbb.ModTeam.Tools (c#)" />
+  </header>
+  <action-group>
+    <copy>
+      <file from="root/includes/functions_recenttopics.php" to="includes/functions_recenttopics.php" />
+      <file from="root/adm/style/acp_recenttopics.html" to="adm/style/acp_recenttopics.html" />
+      <file from="root/includes/acp/acp_recenttopics.php" to="includes/acp/acp_recenttopics.php" />
+      <file from="root/includes/acp/info/acp_recenttopics.php" to="includes/acp/info/acp_recenttopics.php" />
+      <file from="root/install_rt/install.php" to="install_rt/install.php" />
+      <file from="root/install_rt/layout.php" to="install_rt/layout.php" />
+      <file from="root/language/en/mods/info_acp_recenttopics.php" to="language/en/mods/info_acp_recenttopics.php" />
+      <file from="root/language/en/mods/lang_install_rt.php" to="language/en/mods/lang_install_rt.php" />
+      <file from="root/style/prosilver/template/recent_topics_body.html" to="style/prosilver/template/recent_topics_body.html" />
+    </copy>
+    <open src="index.php">
+      <edit>
+        <find><![CDATA[// Output page]]></find>
+        <action type="before-add"><![CDATA[if($config['rt_index'])
+{
+	include($phpbb_root_path . 'includes/functions_recenttopics.' . $phpEx);
+}]]></action>
+      </edit>
+    </open>
+    <open src="adm/style/acp_forums.html">
+      <edit>
+        <find><![CDATA[		<dl>
+			<dt><label for="topics_per_page">{L_FORUM_TOPICS_PAGE}:</label><br /><span>{L_FORUM_TOPICS_PAGE_EXPLAIN}</span></dt>
+			<dd><input type="text" id="topics_per_page" name="topics_per_page" value="{TOPICS_PER_PAGE}" size="4" maxlength="4" /></dd>
+		</dl>]]></find>
+        <action type="after-add"><![CDATA[		<dl>
+			<dt><label for="forum_recent_topics">{L_RECENT_TOPICS_LIST}:</label><br /><span>{L_RECENT_TOPICS_LIST_EXPLAIN}</span></dt>
+			<dd><label><input type="radio" class="radio" name="forum_recent_topics" value="1"<!-- IF RECENT_TOPICS --> id="forum_recent_topics" checked="checked"<!-- ENDIF --> /> {L_YES}</label>
+				<label><input type="radio" class="radio" name="forum_recent_topics" value="0"<!-- IF not RECENT_TOPICS --> id="forum_recent_topics" checked="checked"<!-- ENDIF --> /> {L_NO}</label></dd>
+		</dl>]]></action>
+      </edit>
+    </open>
+    <open src="includes/acp/acp_forums.php">
+      <edit>
+        <find><![CDATA[class acp_forums]]></find>
+        <action type="before-add"><![CDATA[$user->add_lang('mods/info_acp_recenttopics');]]></action>
+      </edit>
+      <edit>
+        <find><![CDATA['forum_topics_per_page'	=> request_var('topics_per_page', 0),]]></find>
+        <action type="after-add"><![CDATA['forum_recent_topics'	=> request_var('forum_recent_topics', 1),]]></action>
+      </edit>
+      <edit>
+        <find><![CDATA['forum_topics_per_page'	=> 0,]]></find>
+        <action type="after-add"><![CDATA['forum_recent_topics'	=> 1,]]></action>
+      </edit>
+      <edit>
+        <find><![CDATA['TOPICS_PER_PAGE'			=> $forum_data['forum_topics_per_page'],]]></find>
+        <action type="after-add"><![CDATA['RECENT_TOPICS'				=> $forum_data['forum_recent_topics'],]]></action>
+      </edit>
+    </open>
+    <open src="styles/prosilver/template/index_body.html">
+      <edit>
+        <find><![CDATA[<!-- IF S_DISPLAY_SEARCH or (S_USER_LOGGED_IN and not S_IS_BOT) -->]]></find>
+        <action type="before-add"><![CDATA[<!-- IF RT_DISPLAY --><!-- INCLUDE recent_topics_body.html --><!-- ENDIF -->]]></action>
+      </edit>
+    </open>
+    <diy-instructions lang="en-gb">Browse to install_rt/install.php and run the installer</diy-instructions>
+    <diy-instructions lang="de">install_rt/install.php aufrufen und ausführen</diy-instructions>
+  </action-group>
+</mod>

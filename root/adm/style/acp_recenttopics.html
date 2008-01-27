@@ -1,0 +1,45 @@
+<!-- $Id: acp_recenttopics.html 68 2008-01-06 01:03:56Z nickvergessen $ -->
+<!-- INCLUDE overall_header.html -->
+
+<h1>{L_RECENT_TOPICS_MOD}</h1>
+<!-- IF RT_VERSION --><p>{RT_VERSION}</p><!-- ENDIF -->
+
+<!-- IF RT_VERSION -->
+<form id="acp_board" method="post" action="{U_ACTION}">
+	<fieldset>
+		<dl>
+			<dt><label for="rt_number">{L_RT_NUMBER}:</label><br />
+			<span>{L_RT_NUMBER_EXP}</span></dt>
+			<dd><input type="text" name="rt_number" size="30" value="{RT_NUMBER}" /></dd>
+		</dl>
+		<dl>
+			<dt><label for="rt_anti_topics">{L_RT_ANTI_TOPICS}:</label><br />
+			<span>{L_RT_ANTI_TOPICS_EXP}</span></dt>
+			<dd><input type="text" name="rt_anti_topics" size="30" value="{RT_ANTI_TOPICS}" /></dd>
+		</dl>
+	</fieldset>
+	<fieldset>
+		<legend>{L_RT_VIEW_ON}</legend>
+		<dl>
+			<dt><label for="rt_index">{L_RT_INDEX}</label></dt>
+			<dd><input type="radio" class="radio" name="rt_index" value="1" <!-- IF RT_INDEX -->checked="checked"<!-- ENDIF -->/> {L_YES} &nbsp; 
+				<input type="radio" class="radio" name="rt_index" value="0" <!-- IF not RT_INDEX -->checked="checked"<!-- ENDIF --> /> {L_NO}</dd>
+		</dl>
+		<!-- IF RT_MUSTER and not RT_MUSTER -->
+		<dl>
+			<dt><label for="rt_muster">{L_RT_MUSTER}</label></dt>
+			<dd><input type="radio" class="radio" name="rt_muster" value="1" <!-- IF RT_MUSTER -->checked="checked"<!-- ENDIF -->/> {L_YES} &nbsp; 
+				<input type="radio" class="radio" name="rt_muster" value="0" <!-- IF not RT_MUSTER -->checked="checked"<!-- ENDIF --> /> {L_NO}</dd>
+		</dl>
+		<!-- ENDIF -->
+	</fieldset>
+	<fieldset>
+		<p class="submit-buttons">
+			<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />&nbsp;
+			<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />
+		</p>
+	</fieldset>
+	{S_FORM_TOKEN}
+</form>
+<!-- ENDIF -->
+<!-- INCLUDE overall_footer.html -->
