@@ -72,6 +72,7 @@ $sql = 'SELECT t.*, i.icons_url, i.icons_width, i.icons_height, tp.topic_posted,
 			f.forum_recent_topics = 1
 			' . (($onlyforum) ? ' AND f.forum_id IN (' . $onlyforum . ')': '') . "
 			" . (($rt_anti_topics) ? ' AND t.topic_id not IN (' . $rt_anti_topics . ')': '') . "
+			AND t.topic_moved_id = 0
 			AND $forum_sql
 		)
 		OR t.topic_type IN (" . POST_GLOBAL . ")
