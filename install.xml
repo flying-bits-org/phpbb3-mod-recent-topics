@@ -64,6 +64,7 @@
   <action-group>
     <copy>
       <file from="root/includes/functions_recenttopics.php" to="includes/functions_recenttopics.php" />
+      <file from="root/adm/mods/nv_recenttopics_version.php" to="adm/mods/nv_recenttopics_version.php" />
       <file from="root/adm/style/acp_recenttopics.html" to="adm/style/acp_recenttopics.html" />
       <file from="root/includes/acp/acp_recenttopics.php" to="includes/acp/acp_recenttopics.php" />
       <file from="root/includes/acp/info/acp_recenttopics.php" to="includes/acp/info/acp_recenttopics.php" />
