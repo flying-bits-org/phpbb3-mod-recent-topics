@@ -1,5 +1,13 @@
 <!-- $Id: recent_topics_body.html 68 2008-01-06 01:03:56Z nickvergessen $ -->
 <div id="pagecontent">
+	<!-- IF PAGINATION -->
+		<table width="100%" cellspacing="1">
+		<tr>
+			<td class="nav" valign="middle" nowrap="nowrap">&nbsp;{PAGE_NUMBER}<br /></td>
+			<td class="gensmall" width="100%" align="{S_CONTENT_FLOW_END}" nowrap="nowrap"><!-- INCLUDE pagination.html --></td>
+		</tr>
+		</table>
+	<!-- ENDIF -->
 	<table class="tablebg" width="100%" cellspacing="1">
 		<tr class="nav">
 			<td class="cat" colspan="<!-- IF S_TOPIC_ICONS -->6<!-- ELSE -->5<!-- ENDIF -->" valign="middle" align="center">{L_RECENT_TOPICS}</td>

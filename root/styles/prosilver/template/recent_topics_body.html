@@ -1,4 +1,9 @@
 <!-- $Id: recent_topics_body.html 68 2008-01-06 01:03:56Z nickvergessen $ -->
+<!-- IF PAGINATION -->
+	<div class="pagination">
+		{PAGE_NUMBER}<!-- IF PAGINATION --> &bull; <span>{PAGINATION}</span><!-- ENDIF -->
+	</div>
+<!-- ENDIF -->
 <!-- BEGIN recenttopicrow -->
 	<!-- IF not recenttopicrow.S_TOPIC_TYPE_SWITCH and not recenttopicrow.S_FIRST_ROW -->
 		</ul>

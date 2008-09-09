@@ -40,6 +40,7 @@ echo '							<li' . (($mode == 'else') ? $activemenu : '') . '><a href="install.
 echo '							<li class="header">' . $user->lang['INSTALLER_INSTALL_MENU'] . '</li>';
 echo '							<li' . (($mode == 'install') ? $activemenu : '') . '><a href="install.php?mode=install"><span>' . sprintf($user->lang['INSTALLER_INSTALL_VERSION'], $new_mod_version) . '</span></a></li>';
 echo '							<li class="header">' . $user->lang['INSTALLER_UPDATE_MENU'] . '</li>';
+echo '							<li' . (($mode == 'update100d') ? $activemenu : '') . '><a href="install.php?mode=update100d&amp;v=1.0.0d"><span>' . $user->lang['INSTALLER_UPDATE_VERSION'] . '1.0.0d</span></a></li>';
 echo '							<li' . (($mode == 'update011') ? $activemenu : '') . '><a href="install.php?mode=update011&amp;v=0.1.1"><span>' . $user->lang['INSTALLER_UPDATE_VERSION'] . '0.1.1</span></a></li>';
 echo '						</ul>';
 echo '					</div>';
@@ -83,7 +84,7 @@ if ($mode == 'install')
 		echo '</form>';
 	}
 }
-else if (($mode == 'update011'))
+else if (($mode == 'update011') || ($mode == 'update100d'))
 {
 	if ($update == 1)
 	{

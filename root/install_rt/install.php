@@ -23,7 +23,7 @@ $user->session_begin();
 $auth->acl($user->data);
 $user->setup();
 $user->add_lang('mods/lang_install_rt');
-$new_mod_version = '1.0.0d';
+$new_mod_version = '1.0.1';
 $page_title = 'NV recent topics v' . $new_mod_version;
 
 function install_back_link($u_action)
@@ -79,6 +79,7 @@ switch ($mode)
 				WHERE config_name = 'rt_anti_topics'
 					OR config_name = 'rt_mod_version'
 					OR config_name = 'rt_number'
+					OR config_name = 'rt_page_number'
 					OR config_name = 'rt_others'
 					OR config_name = 'rt_memberlist'
 					OR config_name = 'rt_index'
@@ -120,6 +121,7 @@ switch ($mode)
 
 			set_config('rt_mod_version', $new_mod_version);
 			set_config('rt_number', 5);
+			set_config('rt_page_number', 0);
 			set_config('rt_anti_topics', 0);
 			set_config('rt_index', 1);
 			// clear cache and log what we did
@@ -130,13 +132,14 @@ switch ($mode)
 	break;
 	case 'update011':
 		$update = request_var('update', 0);
-		$version = request_var('v', '0', true);
+		$version = request_var('v', '0.0.0', true);
 		$updated = false;
 		if ($update == 1)
 		{
 			$sql = 'DELETE FROM ' . CONFIG_TABLE . "
 				WHERE config_name = 'rt_mod_version'
 					OR config_name = 'rt_number'
+					OR config_name = 'rt_page_number'
 					OR config_name = 'rt_others'
 					OR config_name = 'rt_memberlist'
 					OR config_name = 'rt_index'
@@ -153,8 +156,22 @@ switch ($mode)
 
 			set_config('rt_mod_version', $new_mod_version);
 			set_config('rt_number', 5);
+			set_config('rt_page_number', 0);
 			set_config('rt_index', 1);
 			// clear cache and log what we did
+			$cache->purge();
+			add_log('admin', sprintf($user->lang['INSTALLER_UPDATE_SUCCESSFUL'], $version, $new_mod_version));
+			$updated = true;
+		}
+	break;
+	case 'update100d':
+		$update = request_var('update', 0);
+		$version = request_var('v', '0.0.0', true);
+		$updated = false;
+		if ($update == 1)
+		{
+			set_config('rt_page_number', 0);
+			set_config('rt_mod_version', $new_mod_version);
 			$cache->purge();
 			add_log('admin', sprintf($user->lang['INSTALLER_UPDATE_SUCCESSFUL'], $version, $new_mod_version));
 			$updated = true;

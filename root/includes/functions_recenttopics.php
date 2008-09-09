@@ -17,22 +17,16 @@ if (!defined('IN_PHPBB'))
 	exit;
 }
 
-//we run it and display it on this page, go on...
-//get some files and data
 include_once($phpbb_root_path . 'includes/functions_display.' . $phpEx);
+
 $user->add_lang('mods/info_acp_recenttopics');
-$user_id = $user->data['user_id'];
-$limit = $config['rt_number'];
 
-$template->assign_vars(array(
-	'RT_DISPLAY'		=> true,
-	'NEWEST_POST_IMG'			=> $user->img('icon_topic_newest', 'VIEW_NEWEST_POST'),
-));
+$limit			= $config['rt_number'];
+$page_limit		= $config['rt_page_number'] * $config['rt_number'];
+$start			= request_var('start', 0);
+$rt_anti_topics	= ($config['rt_anti_topics']) ? $config['rt_anti_topics'] : '0';
+$onlyforum		= request_var('f', 0);
 
-$rt_anti_topics = '0';
-$rt_anti_topics = $config['rt_anti_topics'];
-$onlyforum = 0;
-$onlyforum = request_var('f', 0);
 $sql = 'SELECT * FROM ' . FORUMS_TABLE . "
 	ORDER BY left_id";
 $result = $db->sql_query($sql);
@@ -44,6 +38,7 @@ while ($row = $db->sql_fetchrow($result))
 	}
 }
 $db->sql_freeresult($result);
+
 $forum_ary = array();
 $forum_read_ary = $auth->acl_getf('f_read');
 foreach ($forum_read_ary as $forum_id => $allowed)
@@ -62,24 +57,19 @@ $sql = 'SELECT t.*, i.icons_url, i.icons_width, i.icons_height, tp.topic_posted,
 	FROM ' . TOPICS_TABLE . ' t
 	LEFT JOIN ' . TOPICS_POSTED_TABLE . ' tp
 		ON (t.topic_id = tp.topic_id
-			AND tp.user_id = ' . $user_id . ')
+			AND tp.user_id = ' . $user->data['user_id'] . ')
 	LEFT JOIN ' . FORUMS_TABLE . ' f
 		ON f.forum_id = t.forum_id
 	LEFT JOIN ' . ICONS_TABLE . ' i
 		ON t.icon_id = i.icons_id
-	WHERE
-		(
-			f.forum_recent_topics = 1
+	WHERE ( f.forum_recent_topics = 1
 			' . (($onlyforum) ? ' AND f.forum_id IN (' . $onlyforum . ')': '') . "
 			" . (($rt_anti_topics) ? ' AND t.topic_id not IN (' . $rt_anti_topics . ')': '') . "
-			AND t.topic_moved_id = 0
-			AND $forum_sql
-		)
+			AND $forum_sql )
 		OR t.topic_type IN (" . POST_GLOBAL . ")
 	GROUP BY t.topic_last_post_id
-	ORDER BY t.topic_last_post_time DESC
-	LIMIT $limit";
-$result = $db->sql_query($sql);
+	ORDER BY t.topic_last_post_time DESC";
+$result = $db->sql_query_limit($sql, $limit, $start);
 while ($row = $db->sql_fetchrow($result))
 {
 	$topic_id = $row['topic_id'];
@@ -195,4 +185,29 @@ while ($row = $db->sql_fetchrow($result))
 }
 $db->sql_freeresult($result);
 
+$topic_counter = 0;
+$sql = 'SELECT t.*
+	FROM ' . TOPICS_TABLE . ' t
+	LEFT JOIN ' . FORUMS_TABLE . ' f
+		ON f.forum_id = t.forum_id
+	WHERE (f.forum_recent_topics = 1
+			' . (($onlyforum) ? ' AND f.forum_id IN (' . $onlyforum . ')': '') . "
+			" . (($rt_anti_topics) ? ' AND t.topic_id not IN (' . $rt_anti_topics . ')': '') . "
+			AND $forum_sql )
+		OR t.topic_type IN (" . POST_GLOBAL . ")
+	GROUP BY t.topic_last_post_id";
+$result = $db->sql_query($sql);
+while ($row = $db->sql_fetchrow($result))
+{
+	$topic_counter++;
+}
+$db->sql_freeresult($result);
+
+$topic_counter = ($page_limit < $topic_counter) ? $page_limit : $topic_counter;
+$template->assign_vars(array(
+	'RT_DISPLAY'			=> true,
+	'NEWEST_POST_IMG'		=> $user->img('icon_topic_newest', 'VIEW_NEWEST_POST'),
+	'PAGE_NUMBER'			=> on_page($topic_counter, $limit, $start),
+	'PAGINATION'			=> generate_pagination(append_sid("{$phpbb_root_path}index.$phpEx"), $topic_counter, $limit, $start),
+));
 ?>
