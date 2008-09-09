@@ -3,7 +3,7 @@
 /**
 *
 * @package - NV recent topics
-* @version $Id: lang_install_rt.php 70 2008-01-06 11:10:11Z nickvergessen $
+* @version $Id$
 * @copyright (c) nickvergessen ( http://mods.flying-bits.org/ )
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *

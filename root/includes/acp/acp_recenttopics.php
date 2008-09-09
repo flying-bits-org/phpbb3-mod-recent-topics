@@ -3,7 +3,7 @@
 /**
 *
 * @package - NV recent topics
-* @version $Id: acp_recenttopics.php 90 2008-01-11 14:44:27Z nickvergessen $
+* @version $Id$
 * @copyright (c) nickvergessen ( http://mods.flying-bits.org/ )
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -33,11 +33,7 @@ class acp_recenttopics
 			{
 				trigger_error('FORM_INVALID');
 			}
-			$rt_anti_topics		= request_var('rt_anti_topics', '0', true);
-			$rt_number			= request_var('rt_number', 5);
-			$rt_index			= request_var('rt_index', 0);
-			#$rt_muster			= request_var('rt_muster', 0);
-			set_config('rt_anti_topics', request_var('rt_anti_topics', '0'));
+			set_config('rt_anti_topics', request_var('rt_anti_topics', 0));
 			set_config('rt_number', request_var('rt_number', 5));
 			set_config('rt_page_number', request_var('rt_page_number', 0));
 			set_config('rt_index', request_var('rt_index', 0));

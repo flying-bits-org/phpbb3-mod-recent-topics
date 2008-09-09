@@ -3,7 +3,7 @@
 /**
 *
 * @package - NV "who was here?"
-* @version $Id: layout.php 69 2008-01-06 11:06:24Z nickvergessen $
+* @version $Id$
 * @copyright (c) nickvergessen ( http://mods.flying-bits.org/ )
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License 
 *

@@ -3,7 +3,7 @@
 /**
 *
 * @package - NV recent topics
-* @version $Id: functions_recenttopics.php 68 2008-01-06 01:03:56Z nickvergessen $
+* @version $Id$
 * @copyright (c) nickvergessen ( http://mods.flying-bits.org/ )
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
