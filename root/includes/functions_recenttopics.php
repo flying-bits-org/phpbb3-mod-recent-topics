@@ -4,7 +4,7 @@
 *
 * @package - NV recent topics
 * @version $Id$
-* @copyright (c) nickvergessen ( http://mods.flying-bits.org/ )
+* @copyright (c) nickvergessen ( http://www.flying-bits.org/ )
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
 */
@@ -24,22 +24,27 @@ $user->add_lang('mods/info_acp_recenttopics');
 $limit			= $config['rt_number'];
 $page_limit		= $config['rt_page_number'] * $config['rt_number'];
 $start			= request_var('start', 0);
-$rt_anti_topics	= ($config['rt_anti_topics']) ? $config['rt_anti_topics'] : '0';
+$rt_anti_topics	= $config['rt_anti_topics'];
 $onlyforum		= request_var('f', 0);
 
-$sql = 'SELECT * FROM ' . FORUMS_TABLE . "
-	ORDER BY left_id";
-$result = $db->sql_query($sql);
-while ($row = $db->sql_fetchrow($result))
+// Only call the query, if we need to
+if ($onlyforum)
 {
-	if (strstr($onlyforum, $row['parent_id']))
+	$sql = 'SELECT parent_id, forum_id FROM ' . FORUMS_TABLE . "
+		ORDER BY left_id";
+	$result = $db->sql_query($sql);
+	while ($row = $db->sql_fetchrow($result))
 	{
-		$onlyforum .= ', ' . $row['forum_id'];
+		if (strstr($onlyforum, $row['parent_id']))
+		{
+			$onlyforum .= ', ' . $row['forum_id'];
+		}
 	}
+	$db->sql_freeresult($result);
 }
-$db->sql_freeresult($result);
 
-$forum_ary = array();
+// Get the allowed forums
+$forum_ary = $topic_ary = array();
 $forum_read_ary = $auth->acl_getf('f_read');
 foreach ($forum_read_ary as $forum_id => $allowed)
 {
@@ -49,11 +54,30 @@ foreach ($forum_read_ary as $forum_id => $allowed)
 	}
 }
 $forum_ary = array_unique($forum_ary);
-$forum_sql = (sizeof($forum_ary)) ? $db->sql_in_set('t.forum_id', $forum_ary, false) : $db->sql_in_set('t.forum_id', '0', false);
 
-$keeponrunning = $topic_id = 0;
+// Get the allowed topics
+$sql = 'SELECT t.topic_id
+	FROM ' . TOPICS_TABLE . ' t
+	LEFT JOIN ' . FORUMS_TABLE . ' f
+		ON f.forum_id = t.forum_id
+	WHERE (
+			f.forum_recent_topics = 1
+			' . (($onlyforum) ? ' AND ' . $db->sql_in_set('t.forum_id', $onlyforum) : '') . '
+			AND ' . $db->sql_in_set('t.topic_id', $rt_anti_topics, true) . '
+			AND ' . $db->sql_in_set('t.forum_id', $forum_ary) . '
+		)
+		OR t.topic_type = ' . POST_GLOBAL . '
+	GROUP BY t.topic_last_post_id
+	ORDER BY t.topic_last_post_time DESC';
+$result = $db->sql_query_limit($sql, $limit + 1, $start);
+while ($row = $db->sql_fetchrow($result))
+{
+	$topic_ary[] = $row['topic_id'];
+}
+$db->sql_freeresult($result);
 
-$sql = 'SELECT t.*, i.icons_url, i.icons_width, i.icons_height, tp.topic_posted, f.forum_name, f.forum_type, f.forum_flags
+// Now only pull the data of the requested topics
+$sql = 'SELECT t.*, i.icons_url, i.icons_width, i.icons_height, tp.topic_posted, f.forum_name
 	FROM ' . TOPICS_TABLE . ' t
 	LEFT JOIN ' . TOPICS_POSTED_TABLE . ' tp
 		ON (t.topic_id = tp.topic_id
@@ -62,18 +86,31 @@ $sql = 'SELECT t.*, i.icons_url, i.icons_width, i.icons_height, tp.topic_posted,
 		ON f.forum_id = t.forum_id
 	LEFT JOIN ' . ICONS_TABLE . ' i
 		ON t.icon_id = i.icons_id
-	WHERE ( f.forum_recent_topics = 1
-			' . (($onlyforum) ? ' AND f.forum_id IN (' . $onlyforum . ')': '') . "
-			" . (($rt_anti_topics) ? ' AND t.topic_id not IN (' . $rt_anti_topics . ')': '') . "
-			AND $forum_sql )
-		OR t.topic_type IN (" . POST_GLOBAL . ")
-	GROUP BY t.topic_last_post_id
-	ORDER BY t.topic_last_post_time DESC";
-$result = $db->sql_query_limit($sql, $limit, $start);
+	WHERE ' . $db->sql_in_set('t.topic_id', $topic_ary) . '
+	ORDER BY t.topic_last_post_time DESC';
+$result = $db->sql_query_limit($sql, $limit, 0);
+
 while ($row = $db->sql_fetchrow($result))
 {
 	$topic_id = $row['topic_id'];
 	$forum_id = $row['forum_id'];
+
+	// Cheat for Global Announcements on the unread-link: copied from search.php
+	if (!$forum_id && !isset($g_forum_id))
+	{
+		$sql2 = 'SELECT forum_id
+			FROM ' . FORUMS_TABLE . '
+			WHERE forum_type = ' . FORUM_POST . '
+				AND ' . $db->sql_in_set('forum_id', $forum_ary);
+		$result2 = $db->sql_query_limit($sql2, 1);
+		$g_forum_id = (int) $db->sql_fetchfield('forum_id');
+		$forum_id = $g_forum_id;
+	}
+	else if (!$forum_id)
+	{
+		$forum_id = $g_forum_id;
+	}
+
 	$s_type_switch_test = ($row['topic_type'] == POST_ANNOUNCE || $row['topic_type'] == POST_GLOBAL) ? 1 : 0;
 	$replies = ($auth->acl_get('m_approve', $forum_id)) ? $row['topic_replies_real'] : $row['topic_replies'];
 	$topic_tracking_info = get_complete_topic_tracking($forum_id, $topic_id, $global_announce_list = false);
@@ -128,7 +165,7 @@ while ($row = $db->sql_fetchrow($result))
 	{
 		$topic_type = $user->lang['VIEW_TOPIC_POLL'];
 	}
-	$view_topic_url = append_sid("{$phpbb_root_path}viewtopic.$phpEx", 'f=' . (($row['forum_id']) ? $row['forum_id'] : $forum_id) . '&amp;t=' . $topic_id);
+	$view_topic_url = append_sid("{$phpbb_root_path}viewtopic.$phpEx", 'f=' . $forum_id . '&amp;t=' . $topic_id);
 	$view_forum_url = append_sid("{$phpbb_root_path}viewforum.$phpEx", 'f=' . $forum_id);
 	$topic_unapproved = (!$row['topic_approved'] && $auth->acl_get('m_approve', $forum_id)) ? true : false;
 	$posts_unapproved = ($row['topic_approved'] && $row['topic_replies'] < $row['topic_replies_real'] && $auth->acl_get('m_approve', $forum_id)) ? true : false;
@@ -186,22 +223,27 @@ while ($row = $db->sql_fetchrow($result))
 $db->sql_freeresult($result);
 
 $topic_counter = 0;
-$sql = 'SELECT t.*
-	FROM ' . TOPICS_TABLE . ' t
-	LEFT JOIN ' . FORUMS_TABLE . ' f
-		ON f.forum_id = t.forum_id
-	WHERE (f.forum_recent_topics = 1
-			' . (($onlyforum) ? ' AND f.forum_id IN (' . $onlyforum . ')': '') . "
-			" . (($rt_anti_topics) ? ' AND t.topic_id not IN (' . $rt_anti_topics . ')': '') . "
-			AND $forum_sql )
-		OR t.topic_type IN (" . POST_GLOBAL . ")
-	GROUP BY t.topic_last_post_id";
-$result = $db->sql_query($sql);
-while ($row = $db->sql_fetchrow($result))
+if (count($topic_ary) > $limit)
 {
-	$topic_counter++;
+	$sql = 'SELECT t.topic_id
+		FROM ' . TOPICS_TABLE . ' t
+		LEFT JOIN ' . FORUMS_TABLE . ' f
+			ON f.forum_id = t.forum_id
+		WHERE (
+				f.forum_recent_topics = 1
+				' . (($onlyforum) ? ' AND ' . $db->sql_in_set('t.forum_id', $onlyforum) : '') . '
+				AND ' . $db->sql_in_set('t.topic_id', $rt_anti_topics, true) . '
+				AND ' . $db->sql_in_set('t.forum_id', $forum_ary) . '
+			)
+			OR t.topic_type = ' . POST_GLOBAL . '
+		GROUP BY t.topic_last_post_id';
+	$result = $db->sql_query($sql);
+	while ($row = $db->sql_fetchrow($result))
+	{
+		$topic_counter++;
+	}
+	$db->sql_freeresult($result);
 }
-$db->sql_freeresult($result);
 
 $topic_counter = ($page_limit < $topic_counter) ? $page_limit : $topic_counter;
 $template->assign_vars(array(

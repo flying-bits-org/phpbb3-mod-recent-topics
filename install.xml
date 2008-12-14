@@ -19,11 +19,11 @@
         <contributions />
       </author>
     </author-group>
-    <mod-version>1.0.1</mod-version>
+    <mod-version>1.0.2</mod-version>
     <installation>
       <level>easy</level>
       <time>300</time>
-      <target-version>3.0.2</target-version>
+      <target-version>3.0.4</target-version>
     </installation>
     <link-group>
       <link type="parent" lang="de" href="contrib/update_1_0_0d_to_1_0_1/update.xml">Update von 1.0.0d auf 1.0.1</link>
@@ -37,25 +37,26 @@
     </link-group>
     <history>
       <entry>
+        <date>2008-12-14</date>
+        <rev-version>1.0.2</rev-version>
+        <changelog lang="en-gb">
+          <change>Reduced the number of SQLs: only call if needed.</change>
+          <change>Reduced the SQL-time to about 1/4th</change>
+        </changelog>
+      </entry>
+      <entry>
         <date>2008-09-09</date>
         <rev-version>1.0.1</rev-version>
-        <changelog lang="en-GB">
+        <changelog lang="en-gb">
           <change>added a little Pagination</change>
-        </changelog>
-        <changelog lang="de">
-          <change>kleine Seitennavigation hinzugefügt</change>
         </changelog>
       </entry>
       <entry>
         <date>2008-01-06</date>
         <rev-version>1.0.0</rev-version>
-        <changelog lang="en-GB">
+        <changelog lang="en-gb">
           <change>finale version</change>
           <change>little fix: "unread-image"</change>
-        </changelog>
-        <changelog lang="de">
-          <change>vorerst letzte Version</change>
-          <change>kleiner Fix: "ungelesen-Bildchen"</change>
         </changelog>
       </entry>
     </history>
