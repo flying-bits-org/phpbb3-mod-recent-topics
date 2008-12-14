@@ -23,7 +23,7 @@ $user->session_begin();
 $auth->acl($user->data);
 $user->setup();
 $user->add_lang('mods/lang_install_rt');
-$new_mod_version = '1.0.1';
+$new_mod_version = '1.0.2';
 $page_title = 'NV recent topics v' . $new_mod_version;
 
 function install_back_link($u_action)
@@ -40,40 +40,13 @@ switch ($mode)
 		$installed = false;
 		if ($install == 1)
 		{
-				switch ($db->sql_layer)
-				{
-					case 'firebird':
-						$sql = 'ALTER TABLE "' . FORUMS_TABLE . '" ADD "forum_recent_topics"  tinyint(1) unsigned DEFAULT "1" NOT NULL AFTER forum_topics_real;';
-						$result = $db->sql_query($sql);
-					break;
-
-					case 'mssql':
-						$sql = 'ALTER TABLE [' . FORUMS_TABLE . '] ADD [forum_recent_topics]  tinyint(1) unsigned DEFAULT "1" NOT NULL AFTER forum_topics_real;';
-						$result = $db->sql_query($sql);
-					break;
-
-					case 'mysql':
-					case 'mysqli':
-					case 'mysql4':
-						$sql = 'ALTER TABLE `' . FORUMS_TABLE . '` ADD COLUMN `forum_recent_topics` tinyint(1) unsigned DEFAULT "1" NOT NULL AFTER forum_topics_real;';
-						$result = $db->sql_query($sql);
-					break;
-
-					case 'oracle':
-						$sql = 'ALTER TABLE ' . FORUMS_TABLE . ' ADD forum_recent_topics  tinyint(1) unsigned DEFAULT "1" NOT NULL AFTER forum_topics_real;';
-						$result = $db->sql_query($sql);
-					break;
-
-					case 'postgres':
-						$sql = 'ALTER TABLE ' . FORUMS_TABLE . ' ADD COLUMN "forum_recent_topics"  tinyint(1) unsigned DEFAULT "1" NOT NULL AFTER forum_topics_real;';
-						$result = $db->sql_query($sql);
-					break;
-
-					default:
-						//ALTER TABLE `phpbb_forums` ADD `forum_recent_topics` tinyint(1) unsigned DEFAULT "1" NOT NULL AFTER forum_topics_real;
-						trigger_error($user->lang['RT_UNSUPPORTED'] . install_back_link($this->u_action), E_USER_WARNING);
-					break;
-				}
+			// Use phpBB-Stuff
+			include($phpbb_root_path . 'includes/db/db_tools.' . $phpEx);
+			$phpbb_db_tools = new phpbb_db_tools($db);
+			if (!$phpbb_db_tools->sql_column_exists(FORUMS_TABLE, 'forum_recent_topics'))
+			{
+				$phpbb_db_tools->sql_column_add(FORUMS_TABLE, 'forum_recent_topics', array('TINT:1', 1));
+			}
 
 			$sql = 'DELETE FROM ' . CONFIG_TABLE . "
 				WHERE config_name = 'rt_anti_topics'
@@ -124,47 +97,14 @@ switch ($mode)
 			set_config('rt_page_number', 0);
 			set_config('rt_anti_topics', 0);
 			set_config('rt_index', 1);
+
 			// clear cache and log what we did
 			$cache->purge();
 			add_log('admin', sprintf($user->lang['INSTALLER_INSTALL_SUCCESSFUL'], $new_mod_version));
 			$installed = true;
 		}
 	break;
-	case 'update011':
-		$update = request_var('update', 0);
-		$version = request_var('v', '0.0.0', true);
-		$updated = false;
-		if ($update == 1)
-		{
-			$sql = 'DELETE FROM ' . CONFIG_TABLE . "
-				WHERE config_name = 'rt_mod_version'
-					OR config_name = 'rt_number'
-					OR config_name = 'rt_page_number'
-					OR config_name = 'rt_others'
-					OR config_name = 'rt_memberlist'
-					OR config_name = 'rt_index'
-					OR config_name = 'rt_search'
-					OR config_name = 'rt_faq'
-					OR config_name = 'rt_mcp'
-					OR config_name = 'rt_ucp'
-					OR config_name = 'rt_viewforum'
-					OR config_name = 'rt_viewtopic'
-					OR config_name = 'rt_viewonline'
-					OR config_name = 'rt_posting'
-					OR config_name = 'rt_report'";
-			$result = $db->sql_query($sql);
-
-			set_config('rt_mod_version', $new_mod_version);
-			set_config('rt_number', 5);
-			set_config('rt_page_number', 0);
-			set_config('rt_index', 1);
-			// clear cache and log what we did
-			$cache->purge();
-			add_log('admin', sprintf($user->lang['INSTALLER_UPDATE_SUCCESSFUL'], $version, $new_mod_version));
-			$updated = true;
-		}
-	break;
-	case 'update100d':
+	case 'update_1_0_0d':
 		$update = request_var('update', 0);
 		$version = request_var('v', '0.0.0', true);
 		$updated = false;
@@ -177,8 +117,17 @@ switch ($mode)
 			$updated = true;
 		}
 	break;
-	default:
-		//we had a little cheater
+	case 'update_1_0_1':
+		$update = request_var('update', 0);
+		$version = request_var('v', '0.0.0', true);
+		$updated = false;
+		if ($update == 1)
+		{
+			set_config('rt_mod_version', $new_mod_version);
+			$cache->purge();
+			add_log('admin', sprintf($user->lang['INSTALLER_UPDATE_SUCCESSFUL'], $version, $new_mod_version));
+			$updated = true;
+		}
 	break;
 }
 

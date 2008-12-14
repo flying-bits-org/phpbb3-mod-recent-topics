@@ -37,7 +37,6 @@ class acp_recenttopics
 			set_config('rt_number', request_var('rt_number', 5));
 			set_config('rt_page_number', request_var('rt_page_number', 0));
 			set_config('rt_index', request_var('rt_index', 0));
-			#set_config('rt_muster', request_var('rt_muster', 0));
 			trigger_error($user->lang['RT_SAVED'] . adm_back_link($this->u_action));
 		}
 		$template->assign_vars(array(
@@ -46,7 +45,6 @@ class acp_recenttopics
 			'RT_NUMBER'				=> $config['rt_number'],
 			'RT_PAGE_NUMBER'		=> $config['rt_page_number'],
 			'RT_INDEX'				=> $config['rt_index'],
-			#'RT_MUSTER'				=> $config['rt_muster'],
 			'U_ACTION'				=> $this->u_action,
 		));
 	}
