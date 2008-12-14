@@ -25,7 +25,7 @@ class nv_recenttopics_version
 			'author'	=> 'nickvergessen',
 			'title'		=> 'NV Recent Topics',
 			'tag'		=> 'nv_recenttopics',
-			'version'	=> '1.0.1',
+			'version'	=> '1.0.2',
 			'file'		=> array('www.flying-bits.org', 'updatecheck', 'nv_recenttopics.xml'),
 		);
 	}
