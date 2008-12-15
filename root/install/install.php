@@ -22,7 +22,12 @@ include($phpbb_root_path . 'includes/acp/acp_modules.' . $phpEx);
 $user->session_begin();
 $auth->acl($user->data);
 $user->setup();
+
+// Load language and custom template-path
 $user->add_lang('mods/lang_install_rt');
+$template->set_custom_template('style', 'install_recent_topics');
+$template->assign_var('T_TEMPLATE_PATH', 'style');
+
 $new_mod_version = '1.0.2';
 $page_title = 'NV recent topics v' . $new_mod_version;
 
@@ -32,13 +37,13 @@ function install_back_link($u_action)
 	return '<br /><br /><a href="' . $u_action . '">&laquo; ' . $user->lang['BACK_TO_PREV'] . '</a>';
 }
 
-$mode = request_var('mode', 'else', true);
+$mode = request_var('mode', 'else');
+$version = request_var('version', '0.0.0');
+$confirm = request_var('confirm', 0);
 switch ($mode)
 {
 	case 'install':
-		$install = request_var('install', 0);
-		$installed = false;
-		if ($install == 1)
+		if ($confirm)
 		{
 			// Use phpBB-Stuff
 			include($phpbb_root_path . 'includes/db/db_tools.' . $phpEx);
@@ -101,35 +106,86 @@ switch ($mode)
 			// clear cache and log what we did
 			$cache->purge();
 			add_log('admin', sprintf($user->lang['INSTALLER_INSTALL_SUCCESSFUL'], $new_mod_version));
-			$installed = true;
+
+			$template->assign_vars(array(
+				'S_INFORMATION'		=> sprintf($user->lang['INSTALLER_INSTALL_SUCCESSFUL'], $new_mod_version),
+			));
 		}
+		$template->assign_vars(array(
+			'S_NOT_INTRO'		=> true,
+			'S_INSTALL'			=> true,
+			'L_WELCOME'			=> $user->lang['INSTALLER_INSTALL_WELCOME'],
+			'L_WELCOME_NOTE'	=> $user->lang['INSTALLER_INSTALL_WELCOME_NOTE'],
+			'L_LEGEND'			=> $user->lang['INSTALLER_INSTALL'],
+			'L_LABLE'			=> 'v' . $new_mod_version,
+			'S_ACTION'			=> append_sid("{$phpbb_root_path}install/index.$phpEx", 'mode=install'),
+		));
 	break;
-	case 'update_1_0_0d':
-		$update = request_var('update', 0);
-		$version = request_var('v', '0.0.0', true);
-		$updated = false;
-		if ($update == 1)
+	case 'update':
+		if ($confirm)
 		{
-			set_config('rt_page_number', 0);
+			switch ($version)
+			{
+				case '1.0.0d':
+					set_config('rt_page_number', 0);
+				break;
+				case '1.0.1':
+					
+				break;
+			}
 			set_config('rt_mod_version', $new_mod_version);
 			$cache->purge();
 			add_log('admin', sprintf($user->lang['INSTALLER_UPDATE_SUCCESSFUL'], $version, $new_mod_version));
-			$updated = true;
+
+			$template->assign_vars(array(
+				'S_INFORMATION'		=> sprintf($user->lang['INSTALLER_INSTALL_SUCCESSFUL'], $new_mod_version),
+			));
 		}
+		$template->assign_vars(array(
+			'S_NOT_INTRO'		=> true,
+			'S_UPDATE'			=> $version,
+			'L_WELCOME'			=> $user->lang['INSTALLER_UPDATE_WELCOME'],
+			'L_LEGEND'			=> $user->lang['INSTALLER_UPDATE'],
+			'L_LABLE'			=> sprintf($user->lang['INSTALLER_UPDATE_NOTE'], $version, $new_mod_version),
+			'S_ACTION'			=> append_sid("{$phpbb_root_path}install/index.$phpEx", 'mode=update&amp;version=' . $version),
+		));
 	break;
-	case 'update_1_0_1':
-		$update = request_var('update', 0);
-		$version = request_var('v', '0.0.0', true);
-		$updated = false;
-		if ($update == 1)
+	default:
+		if ($user->data['user_type'] == USER_FOUNDER)
 		{
-			set_config('rt_mod_version', $new_mod_version);
-			$cache->purge();
-			add_log('admin', sprintf($user->lang['INSTALLER_UPDATE_SUCCESSFUL'], $version, $new_mod_version));
-			$updated = true;
+			$template->assign_vars(array(
+				'S_INTRO'			=> true,
+				'L_WELCOME'			=> $user->lang['INSTALLER_INTRO_WELCOME'],
+				'L_WELCOME_NOTE'	=> $user->lang['INSTALLER_INTRO_WELCOME_NOTE'],
+			));
 		}
 	break;
 }
+if ($user->data['user_type'] != USER_FOUNDER)
+{
+	$template->assign_vars(array(
+		'S_WARNING'		=> $user->lang['INSTALLER_NEEDS_FOUNDER'],
+	));
+}
 
-include($phpbb_root_path . "install_rt/layout.$phpEx");
+$template->assign_vars(array(
+	'L_PAGE_TITLE'		=> $page_title,
+	'L_INSTALL_VERSION'	=> sprintf($user->lang['INSTALLER_INSTALL_VERSION'], $new_mod_version),
+
+	'S_VERSION'			=> $version,
+
+	'U_INTRO'			=> append_sid("{$phpbb_root_path}install/index.$phpEx"),
+	'U_INSTALL'			=> append_sid("{$phpbb_root_path}install/index.$phpEx", 'mode=install'),
+	'U_UPDATE_1_0_0d'	=> append_sid("{$phpbb_root_path}install/index.$phpEx", 'mode=update&amp;version=1.0.0d'),
+	'U_UPDATE_1_0_1'	=> append_sid("{$phpbb_root_path}install/index.$phpEx", 'mode=update&amp;version=1.0.1'),
+));
+
+page_header($page_title);
+
+$template->set_filenames(array(
+	'body' => 'install_body.html')
+);
+
+page_footer();
+
 ?>
