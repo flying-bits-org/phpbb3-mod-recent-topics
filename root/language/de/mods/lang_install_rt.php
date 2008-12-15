@@ -25,10 +25,9 @@ $lang = array_merge($lang, array(
 	'INSTALLER_INSTALL'					=> 'Installieren',
 	'INSTALLER_INSTALL_MENU'			=> 'Installation',
 	'INSTALLER_INSTALL_SUCCESSFUL'		=> 'Installation der MOD v%s war erfolgreich.',
-	'INSTALLER_INSTALL_UNSUCCESSFUL'	=> 'Installation der MOD v%s war <strong>nicht</strong> erfolgreich.',
 	'INSTALLER_INSTALL_VERSION'			=> 'Installiere MOD v%s',
 	'INSTALLER_INSTALL_WELCOME'			=> 'Willkommen zur Installation',
-	'INSTALLER_INSTALL_WELCOME_NOTE'	=> 'Wenn du den MOD installierst, werden möglicherweise vorhandene Datenbanktabellen mit gleichem Namen gelöscht.',
+	'INSTALLER_INSTALL_WELCOME_NOTE'	=> 'Wenn du den MOD installierst, obwohl er schon installiert ist, werden die Einstellungen überschrieben.',
 
 	'INSTALLER_NEEDS_FOUNDER'			=> 'Du musst als Gründer eingeloggt sein.',
 
@@ -36,11 +35,8 @@ $lang = array_merge($lang, array(
 	'INSTALLER_UPDATE_MENU'				=> 'Updatemenü',
 	'INSTALLER_UPDATE_NOTE'				=> 'Update MOD von v%s nach v%s',
 	'INSTALLER_UPDATE_SUCCESSFUL'		=> 'Update der MOD von v%s nach v%s war erfolgreich.',
-	'INSTALLER_UPDATE_UNSUCCESSFUL'		=> 'Update der MOD von v%s nach v%s war <strong>nicht</strong> erfolgreich.',
 	'INSTALLER_UPDATE_VERSION'			=> 'Update MOD von v',
 	'INSTALLER_UPDATE_WELCOME'			=> 'Willkommen zum Update',
-
-	'RT_UNSUPPORTED'					=> 'Entschuldigung, deine Datenbank wird nicht unterstützt.',
 
 	'WARNING'							=> 'Warnung',
 ));

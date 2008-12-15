@@ -38,11 +38,12 @@
       <file from="root/includes/functions_recenttopics.php" to="includes/functions_recenttopics.php" />
       <file from="root/includes/acp/acp_recenttopics.php" to="includes/acp/acp_recenttopics.php" />
       <file from="root/includes/acp/info/acp_recenttopics.php" to="includes/acp/info/acp_recenttopics.php" />
-      <file from="root/install_rt/*.php" to="install_rt/*.php" />
+      <file from="root/install/index.php" to="install/index.php" />
+      <file from="root/install/style/*.html" to="install/style/*.html" />
       <file from="root/language/en/mods/*.php" to="language/en/mods/*.php" />
       <file from="root/style/prosilver/template/recent_topics_body.html" to="style/prosilver/template/recent_topics_body.html" />
     </copy>
-    <diy-instructions lang="en-gb"><![CDATA[Browse to install_rt/install.php and run the installer]]></diy-instructions>
-    <diy-instructions lang="de"><![CDATA[install_rt/install.php aufrufen und ausführen]]></diy-instructions>
+    <diy-instructions lang="en-gb"><![CDATA[Browse to install/index.php and run the installer]]></diy-instructions>
+    <diy-instructions lang="de"><![CDATA[install/index.php aufrufen und ausführen]]></diy-instructions>
   </action-group>
 </mod>

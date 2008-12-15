@@ -33,7 +33,7 @@
   </header>
   <action-group>
     <copy>
-      <file from="styles/subsilver2/recent_topics_body.html" to="style/subsilver2/template/recent_topics_body.html" />
+      <file from="root/styles/subsilver2/template/recent_topics_body.html" to="style/subsilver2/template/recent_topics_body.html" />
     </copy>
     <open src="styles/subsilver2/template/index_body.html">
       <edit>
@@ -41,7 +41,7 @@
         <action type="before-add"><![CDATA[<!-- IF RT_DISPLAY --><!-- INCLUDE recent_topics_body.html --><!-- ENDIF -->]]></action>
       </edit>
     </open>
-    <diy-instructions lang="en-gb"><![CDATA[Browse to install_rt/install.php and run the installer]]></diy-instructions>
-    <diy-instructions lang="de"><![CDATA[install_rt/install.php aufrufen und ausführen]]></diy-instructions>
+    <diy-instructions lang="en-gb"><![CDATA[Browse to install/index.php and run the installer]]></diy-instructions>
+    <diy-instructions lang="de"><![CDATA[install/index.php aufrufen und ausführen]]></diy-instructions>
   </action-group>
 </mod>

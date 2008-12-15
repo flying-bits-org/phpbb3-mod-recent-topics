@@ -33,10 +33,10 @@
   </header>
   <action-group>
     <copy>
-      <file from="languages/de/info_acp_recenttopics.php" to="language/de/mods/info_acp_recenttopics.php" />
-      <file from="languages/de/lang_install_rt.php" to="language/de/mods/lang_install_rt.php" />
+      <file from="root/language/de/mods/info_acp_recenttopics.php" to="language/de/mods/info_acp_recenttopics.php" />
+      <file from="root/language/de/mods/lang_install_rt.php" to="language/de/mods/lang_install_rt.php" />
     </copy>
-    <diy-instructions lang="en-gb"><![CDATA[Browse to install_rt/install.php and run the installer]]></diy-instructions>
-    <diy-instructions lang="de"><![CDATA[install_rt/install.php aufrufen und ausführen]]></diy-instructions>
+    <diy-instructions lang="en-gb"><![CDATA[Browse to install/index.php and run the installer]]></diy-instructions>
+    <diy-instructions lang="de"><![CDATA[install/index.php aufrufen und ausführen]]></diy-instructions>
   </action-group>
 </mod>
