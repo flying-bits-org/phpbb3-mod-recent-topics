@@ -1,4 +1,3 @@
-<!-- $Id: recent_topics_body.html 68 2008-01-06 01:03:56Z nickvergessen $ -->
 <!-- IF PAGINATION -->
 	<div class="pagination">
 		{PAGE_NUMBER}<!-- IF PAGINATION --> &bull; <span>{PAGINATION}</span><!-- ENDIF -->
@@ -33,13 +32,13 @@
 					<!-- IF recenttopicrow.S_TOPIC_UNAPPROVED or recenttopicrow.S_POSTS_UNAPPROVED --><a href="{recenttopicrow.U_MCP_QUEUE}">{recenttopicrow.UNAPPROVED_IMG}</a> <!-- ENDIF -->
 					<!-- IF recenttopicrow.S_TOPIC_REPORTED --><a href="{recenttopicrow.U_MCP_REPORT}">{REPORTED_IMG}</a><!-- ENDIF --><br />
 					<!-- IF recenttopicrow.PAGINATION --><strong class="pagination"><span>{recenttopicrow.PAGINATION}</span></strong><!-- ENDIF -->
-					<!-- IF recenttopicrow.ATTACH_ICON_IMG -->{recenttopicrow.ATTACH_ICON_IMG} <!-- ENDIF -->{L_POST_BY_AUTHOR} {recenttopicrow.TOPIC_AUTHOR_FULL} {L_POSTED_ON_DATE} {recenttopicrow.FIRST_POST_TIME}
+					<!-- IF recenttopicrow.ATTACH_ICON_IMG -->{recenttopicrow.ATTACH_ICON_IMG} <!-- ENDIF -->{L_POST_BY_AUTHOR} {recenttopicrow.TOPIC_AUTHOR_FULL} &raquo; {recenttopicrow.FIRST_POST_TIME}
 					<!-- IF recenttopicrow.U_VIEW_FORUM and recenttopicrow.FORUM_NAME --><br />{L_IN} <a href="{recenttopicrow.U_VIEW_FORUM}" style="font-weight: bold;">{recenttopicrow.FORUM_NAME}</a><!-- ENDIF -->
 				</dt>
 				<dd class="posts">{recenttopicrow.REPLIES} <dfn>{L_REPLIES}</dfn></dd>
 				<dd class="views">{recenttopicrow.VIEWS} <dfn>{L_VIEWS}</dfn></dd>
 				<dd class="lastpost"><span><dfn>{L_LAST_POST} </dfn>{L_POST_BY_AUTHOR} {recenttopicrow.LAST_POST_AUTHOR_FULL}
-					<a href="{recenttopicrow.U_LAST_POST}">{LAST_POST_IMG}</a> <br />{L_POSTED_ON_DATE} {recenttopicrow.LAST_POST_TIME}</span>
+					<a href="{recenttopicrow.U_LAST_POST}">{LAST_POST_IMG}</a> <br />{recenttopicrow.LAST_POST_TIME}</span>
 				</dd>
 			</dl>
 		</li>
