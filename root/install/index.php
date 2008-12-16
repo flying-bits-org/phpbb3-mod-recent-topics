@@ -18,6 +18,8 @@ $phpEx = substr(strrchr(__FILE__, '.'), 1);
 include($phpbb_root_path . 'common.'.$phpEx);
 include($phpbb_root_path . 'includes/acp/acp_modules.' . $phpEx);
 
+define('ADMIN_START', 1);
+
 // Start session management
 $user->session_begin();
 $auth->acl($user->data);
