@@ -33,14 +33,15 @@ $onlyforum		= request_var('f', 0);
 // Only call the query, if we need to
 if ($onlyforum)
 {
+	$onlyforum_ary = array($onlyforum);
 	$sql = 'SELECT parent_id, forum_id FROM ' . FORUMS_TABLE . "
 		ORDER BY left_id";
 	$result = $db->sql_query($sql);
 	while ($row = $db->sql_fetchrow($result))
 	{
-		if (strstr($onlyforum, $row['parent_id']))
+		if (in_array($row['parent_id'], $onlyforum_ary))
 		{
-			$onlyforum .= ', ' . $row['forum_id'];
+			$onlyforum_ary[] = $row['forum_id'];
 		}
 	}
 	$db->sql_freeresult($result);
@@ -65,7 +66,7 @@ $sql = 'SELECT t.topic_id
 		ON f.forum_id = t.forum_id
 	WHERE (
 			f.forum_recent_topics = 1
-			' . (($onlyforum) ? ' AND ' . $db->sql_in_set('t.forum_id', $onlyforum) : '') . '
+			' . (($onlyforum) ? ' AND ' . $db->sql_in_set('t.forum_id', $onlyforum_ary) : '') . '
 			AND ' . $db->sql_in_set('t.topic_id', $rt_anti_topics, true) . '
 			AND ' . $db->sql_in_set('t.forum_id', $forum_ary, false, true) . '
 		)
@@ -78,6 +79,9 @@ while ($row = $db->sql_fetchrow($result))
 	$topic_ary[] = $row['topic_id'];
 }
 $db->sql_freeresult($result);
+
+// Grab icons
+$icons = $cache->obtain_icons();
 
 // Now only pull the data of the requested topics
 $sql = 'SELECT t.*, i.icons_url, i.icons_width, i.icons_height, tp.topic_posted, f.forum_name
@@ -196,9 +200,9 @@ while ($row = $db->sql_fetchrow($result))
 		'TOPIC_FOLDER_IMG_SRC'	=> $user->img($folder_img, $folder_alt, false, '', 'src'),
 		'TOPIC_FOLDER_IMG_ALT'	=> $user->lang[$folder_alt],
 		'NEWEST_POST_IMG'		=> $user->img('icon_topic_newest', 'VIEW_NEWEST_POST'),
-		'TOPIC_ICON_IMG'		=> (!empty($row['icons_url'])) ? $row['icons_url'] : '',
-		'TOPIC_ICON_IMG_WIDTH'	=> (!empty($row['icons_url'])) ? $row['icons_width'] : '',
-		'TOPIC_ICON_IMG_HEIGHT'	=> (!empty($row['icons_url'])) ? $row['icons_height'] : '',
+		'TOPIC_ICON_IMG'		=> (!empty($icons[$row['icon_id']])) ? $icons[$row['icon_id']]['img'] : '',
+		'TOPIC_ICON_IMG_WIDTH'	=> (!empty($icons[$row['icon_id']])) ? $icons[$row['icon_id']]['width'] : '',
+		'TOPIC_ICON_IMG_HEIGHT'	=> (!empty($icons[$row['icon_id']])) ? $icons[$row['icon_id']]['height'] : '',
 		'ATTACH_ICON_IMG'		=> ($auth->acl_get('u_download') && $auth->acl_get('f_download', $forum_id) && $row['topic_attachment']) ? $user->img('icon_topic_attach', $user->lang['TOTAL_ATTACHMENTS']) : '',
 		'UNAPPROVED_IMG'		=> ($topic_unapproved || $posts_unapproved) ? $user->img('icon_topic_unapproved', ($topic_unapproved) ? 'TOPIC_UNAPPROVED' : 'POSTS_UNAPPROVED') : '',
 		'S_TOPIC_TYPE'			=> $row['topic_type'],
@@ -235,7 +239,7 @@ if (count($topic_ary) > $limit)
 			ON f.forum_id = t.forum_id
 		WHERE (
 				f.forum_recent_topics = 1
-				' . (($onlyforum) ? ' AND ' . $db->sql_in_set('t.forum_id', $onlyforum) : '') . '
+				' . (($onlyforum) ? ' AND ' . $db->sql_in_set('t.forum_id', $onlyforum_ary) : '') . '
 				AND ' . $db->sql_in_set('t.topic_id', $rt_anti_topics, true) . '
 				AND ' . $db->sql_in_set('t.forum_id', $forum_ary, false, true) . '
 			)
