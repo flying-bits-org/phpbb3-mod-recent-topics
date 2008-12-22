@@ -19,7 +19,7 @@ class acp_recenttopics_info
 		return array(
 			'filename'	=> 'acp_recenttopics',
 			'title'		=> 'RECENT_TOPICS_MOD',
-			'version'	=> '1.0.1',
+			'version'	=> '1.0.3',
 			'modes'		=> array(
 				'adjust_recenttopics'	=> array('title' => 'RT_CONFIG', 'auth' => 'acl_a_board', 'cat' => array('RECENT_TOPICS_MOD')),
 			),

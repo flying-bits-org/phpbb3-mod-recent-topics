@@ -19,15 +19,15 @@
         <contributions />
       </author>
     </author-group>
-    <mod-version>1.0.2</mod-version>
+    <mod-version>1.0.3</mod-version>
     <installation>
       <level>easy</level>
       <time>300</time>
       <target-version>3.0.4</target-version>
     </installation>
     <link-group>
-      <link type="parent" lang="de" href="contrib/update_1_0_1_to_1_0_2/update.xml">Update von 1.0.1 auf 1.0.2</link>
-      <link type="parent" lang="en-gb" href="contrib/update_1_0_1_to_1_0_2/update.xml">Update from 1.0.1 to 1.0.2</link>
+      <link type="parent" lang="de" href="contrib/update_1_0_2_to_1_0_3/update.xml">Update von 1.0.2 auf 1.0.3</link>
+      <link type="parent" lang="en-gb" href="contrib/update_1_0_2_to_1_0_3/update.xml">Update from 1.0.2 to 1.0.3</link>
       <link type="language" lang="de" href="contrib/de.xml">Anleitung für das deutsche Sprachpaket</link>
       <link type="language" lang="en-gb" href="contrib/de.xml">Manual for German Language-set</link>
       <link type="template" lang="de" href="contrib/subsilver2.xml">Anleitung für das Style subsilver2</link>
@@ -36,6 +36,14 @@
       <link type="parent" lang="en-gb" href="contrib/Addons/add_any_page/install.xml">Addon: Add to any Page</link>
     </link-group>
     <history>
+      <entry>
+        <date>2008-12-22</date>
+        <rev-version>1.0.3</rev-version>
+        <changelog lang="en-gb">
+          <change><![CDATA[Fixed deny reasons]]></change>
+          <change><![CDATA[Show topics of subforums]]></change>
+        </changelog>
+      </entry>
       <entry>
         <date>2008-12-14</date>
         <rev-version>1.0.2</rev-version>
