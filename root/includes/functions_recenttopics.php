@@ -64,7 +64,7 @@ $sql = 'SELECT t.topic_id
 			f.forum_recent_topics = 1
 			' . (($onlyforum) ? ' AND ' . $db->sql_in_set('t.forum_id', $onlyforum) : '') . '
 			AND ' . $db->sql_in_set('t.topic_id', $rt_anti_topics, true) . '
-			AND ' . $db->sql_in_set('t.forum_id', $forum_ary) . '
+			AND ' . $db->sql_in_set('t.forum_id', $forum_ary, false, true) . '
 		)
 		OR t.topic_type = ' . POST_GLOBAL . '
 	GROUP BY t.topic_last_post_id
@@ -86,7 +86,7 @@ $sql = 'SELECT t.*, i.icons_url, i.icons_width, i.icons_height, tp.topic_posted,
 		ON f.forum_id = t.forum_id
 	LEFT JOIN ' . ICONS_TABLE . ' i
 		ON t.icon_id = i.icons_id
-	WHERE ' . $db->sql_in_set('t.topic_id', $topic_ary) . '
+	WHERE ' . $db->sql_in_set('t.topic_id', $topic_ary, false, true) . '
 	ORDER BY t.topic_last_post_time DESC';
 $result = $db->sql_query_limit($sql, $limit, 0);
 
@@ -101,7 +101,7 @@ while ($row = $db->sql_fetchrow($result))
 		$sql2 = 'SELECT forum_id
 			FROM ' . FORUMS_TABLE . '
 			WHERE forum_type = ' . FORUM_POST . '
-				AND ' . $db->sql_in_set('forum_id', $forum_ary);
+				AND ' . $db->sql_in_set('forum_id', $forum_ary, false, true);
 		$result2 = $db->sql_query_limit($sql2, 1);
 		$g_forum_id = (int) $db->sql_fetchfield('forum_id');
 		$forum_id = $g_forum_id;
@@ -233,7 +233,7 @@ if (count($topic_ary) > $limit)
 				f.forum_recent_topics = 1
 				' . (($onlyforum) ? ' AND ' . $db->sql_in_set('t.forum_id', $onlyforum) : '') . '
 				AND ' . $db->sql_in_set('t.topic_id', $rt_anti_topics, true) . '
-				AND ' . $db->sql_in_set('t.forum_id', $forum_ary) . '
+				AND ' . $db->sql_in_set('t.forum_id', $forum_ary, false, true) . '
 			)
 			OR t.topic_type = ' . POST_GLOBAL . '
 		GROUP BY t.topic_last_post_id';
