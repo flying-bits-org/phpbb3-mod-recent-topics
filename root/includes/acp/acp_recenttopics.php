@@ -33,6 +33,8 @@ class acp_recenttopics
 			{
 				trigger_error('FORM_INVALID');
 			}
+			// request_var should be '' as it is a string ("1,2,3928") here, not a integer.
+			// But this would end up in a SQL-Error, that's why I ended up with adding the 0 in it.
 			set_config('rt_anti_topics', request_var('rt_anti_topics', '0'));
 			set_config('rt_number', request_var('rt_number', 5));
 			set_config('rt_page_number', request_var('rt_page_number', 0));

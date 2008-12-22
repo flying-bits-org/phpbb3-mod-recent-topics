@@ -17,7 +17,10 @@ if (!defined('IN_PHPBB'))
 	exit;
 }
 
-include_once($phpbb_root_path . 'includes/functions_display.' . $phpEx);
+if (!function_exists('display_forums'))
+{
+	include($phpbb_root_path . 'includes/functions_display.' . $phpEx);
+}
 
 $user->add_lang('mods/info_acp_recenttopics');
 
@@ -104,6 +107,7 @@ while ($row = $db->sql_fetchrow($result))
 				AND ' . $db->sql_in_set('forum_id', $forum_ary, false, true);
 		$result2 = $db->sql_query_limit($sql2, 1);
 		$g_forum_id = (int) $db->sql_fetchfield('forum_id');
+		$db->sql_freeresult($result2);
 		$forum_id = $g_forum_id;
 	}
 	else if (!$forum_id)

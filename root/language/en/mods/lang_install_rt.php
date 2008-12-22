@@ -22,8 +22,8 @@ $lang = array_merge($lang, array(
 	'INSTALLER_INTRO_WELCOME'			=> 'Welcome to the MOD Installation',
 	'INSTALLER_INTRO_WELCOME_NOTE'		=> 'Please choose what you want to do.',
 
-	'INSTALLER_INSTALL'					=> 'Install',
-	'INSTALLER_INSTALL_MENU'			=> 'Installmenu',
+	'INSTALLER_INSTALL'					=> 'Installation',
+	'INSTALLER_INSTALL_MENU'			=> 'Installationmenu',
 	'INSTALLER_INSTALL_SUCCESSFUL'		=> 'Installation of the MOD v%s was successful. You may delete the install-folder now.',
 	'INSTALLER_INSTALL_VERSION'			=> 'Install MOD v%s',
 	'INSTALLER_INSTALL_WELCOME'			=> 'Welcome to the Installationmenu',

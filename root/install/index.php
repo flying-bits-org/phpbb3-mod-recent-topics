@@ -4,7 +4,7 @@
 *
 * @package - NV recent topics
 * @version $Id$
-* @copyright (c) nickvergessen ( http://mods.flying-bits.org/ )
+* @copyright (c) nickvergessen ( http://www.flying-bits.org/ )
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
 */
@@ -13,12 +13,11 @@
 * @ignore
 */
 define('IN_PHPBB', true);
+define('ADMIN_START', 1);
 $phpbb_root_path = '../';
 $phpEx = substr(strrchr(__FILE__, '.'), 1);
 include($phpbb_root_path . 'common.'.$phpEx);
 include($phpbb_root_path . 'includes/acp/acp_modules.' . $phpEx);
-
-define('ADMIN_START', 1);
 
 // Start session management
 $user->session_begin();
