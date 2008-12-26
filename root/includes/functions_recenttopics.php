@@ -231,7 +231,7 @@ while ($row = $db->sql_fetchrow($result))
 $db->sql_freeresult($result);
 
 $topic_counter = 0;
-if (count($topic_ary) > $limit)
+if (count($topic_ary) > $limit || $start)
 {
 	$sql = 'SELECT t.topic_id
 		FROM ' . TOPICS_TABLE . ' t
