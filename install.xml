@@ -37,6 +37,13 @@
     </link-group>
     <history>
       <entry>
+        <date>YYYY-MM-DD</date>
+        <rev-version>X.Y.Z</rev-version>
+        <changelog lang="en-gb">
+          <change><![CDATA[Fixed pagination on non index.php (by DavidIQ)]]></change>
+        </changelog>
+      </entry>
+      <entry>
         <date>2008-12-22</date>
         <rev-version>1.0.3</rev-version>
         <changelog lang="en-gb">

@@ -258,6 +258,6 @@ $template->assign_vars(array(
 	'RT_DISPLAY'			=> true,
 	'NEWEST_POST_IMG'		=> $user->img('icon_topic_newest', 'VIEW_NEWEST_POST'),
 	'PAGE_NUMBER'			=> on_page($topic_counter, $limit, $start),
-	'PAGINATION'			=> generate_pagination(append_sid("{$phpbb_root_path}index.$phpEx"), $topic_counter, $limit, $start),
+	'PAGINATION'			=> generate_pagination(append_sid($phpbb_root_path . $user->page['page_name']), $topic_counter, $limit, $start),
 ));
 ?>
