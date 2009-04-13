@@ -25,11 +25,11 @@ $auth->acl($user->data);
 $user->setup();
 
 // Load language and custom template-path
-$user->add_lang('mods/lang_install_rt');
+$user->add_lang('mods/info_acp_recenttopics');
 $template->set_custom_template('style', 'install_recent_topics');
 $template->assign_var('T_TEMPLATE_PATH', 'style');
 
-$new_mod_version = '1.0.3';
+$new_mod_version = '1.0.4';
 $page_title = 'NV recent topics v' . $new_mod_version;
 
 function install_back_link($u_action)
@@ -131,6 +131,7 @@ switch ($mode)
 					set_config('rt_page_number', 0);
 				case '1.0.1':
 				case '1.0.2':
+				case '1.0.3':
 				break;
 			}
 			set_config('rt_mod_version', $new_mod_version);
@@ -179,6 +180,7 @@ $template->assign_vars(array(
 	'U_UPDATE_1_0_0d'	=> append_sid("{$phpbb_root_path}install/index.$phpEx", 'mode=update&amp;version=1.0.0d'),
 	'U_UPDATE_1_0_1'	=> append_sid("{$phpbb_root_path}install/index.$phpEx", 'mode=update&amp;version=1.0.1'),
 	'U_UPDATE_1_0_2'	=> append_sid("{$phpbb_root_path}install/index.$phpEx", 'mode=update&amp;version=1.0.2'),
+	'U_UPDATE_1_0_3'	=> append_sid("{$phpbb_root_path}install/index.$phpEx", 'mode=update&amp;version=1.0.3'),
 ));
 
 page_header($page_title);
