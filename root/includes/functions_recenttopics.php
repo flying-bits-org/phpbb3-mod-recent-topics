@@ -163,6 +163,7 @@ function display_recent_topics($topics_per_page, $num_pages, $excluded_topics)
 		$topic_tracking_info[$forum_id] = get_complete_topic_tracking($forum_id, $topic_ids, $ga_topic_ids);
 	}
 
+	$topic_icons = array();
 	while ($row = $db->sql_fetchrow($result))
 	{
 		$topic_id = $row['topic_id'];
@@ -238,6 +239,10 @@ function display_recent_topics($topics_per_page, $num_pages, $excluded_topics)
 		$posts_unapproved = ($row['topic_approved'] && $row['topic_replies'] < $row['topic_replies_real'] && $auth->acl_get('m_approve', $forum_id)) ? true : false;
 		$u_mcp_queue = ($topic_unapproved || $posts_unapproved) ? append_sid("{$phpbb_root_path}mcp.$phpEx", 'i=queue&amp;mode=' . (($topic_unapproved) ? 'approve_details' : 'unapproved_posts') . "&amp;t=$topic_id", true, $user->session_id) : '';
 		$s_type_switch = ($row['topic_type'] == POST_ANNOUNCE || $row['topic_type'] == POST_GLOBAL) ? 1 : 0;
+		if (!empty($icons[$row['icon_id']]))
+		{
+			$topic_icons[] = $topic_id;
+		}
 
 		$template->assign_block_vars('recenttopicrow', array(
 			'FORUM_ID'					=> $forum_id,
@@ -268,11 +273,12 @@ function display_recent_topics($topics_per_page, $num_pages, $excluded_topics)
 			'TOPIC_ICON_IMG_HEIGHT'	=> (!empty($icons[$row['icon_id']])) ? $icons[$row['icon_id']]['height'] : '',
 			'ATTACH_ICON_IMG'		=> ($auth->acl_get('u_download') && $auth->acl_get('f_download', $forum_id) && $row['topic_attachment']) ? $user->img('icon_topic_attach', $user->lang['TOTAL_ATTACHMENTS']) : '',
 			'UNAPPROVED_IMG'		=> ($topic_unapproved || $posts_unapproved) ? $user->img('icon_topic_unapproved', ($topic_unapproved) ? 'TOPIC_UNAPPROVED' : 'POSTS_UNAPPROVED') : '',
+			'REPORTED_IMG'			=> ($row['topic_reported'] && $auth->acl_get('m_report', $forum_id)) ? $user->img('icon_topic_reported', 'TOPIC_REPORTED') : '',
 
 			'S_TOPIC_TYPE'			=> $row['topic_type'],
 			'S_USER_POSTED'			=> (isset($row['topic_posted']) && $row['topic_posted']) ? true : false,
 			'S_UNREAD_TOPIC'		=> $unread_topic,
-			'S_TOPIC_REPORTED'		=> (!empty($row['topic_reported']) && $auth->acl_get('m_report', $forum_id)) ? true : false,
+			'S_TOPIC_REPORTED'		=> ($row['topic_reported'] && $auth->acl_get('m_report', $forum_id)) ? true : false,
 			'S_TOPIC_UNAPPROVED'	=> $topic_unapproved,
 			'S_POSTS_UNAPPROVED'	=> $posts_unapproved,
 			'S_HAS_POLL'			=> ($row['poll_start']) ? true : false,
@@ -296,6 +302,7 @@ function display_recent_topics($topics_per_page, $num_pages, $excluded_topics)
 	$db->sql_freeresult($result);
 
 	$template->assign_vars(array(
+		'S_TOPIC_ICONS'			=> (sizeof($topic_icons)) ? true : false,
 		'RT_DISPLAY'			=> true,
 		'NEWEST_POST_IMG'		=> $user->img('icon_topic_newest', 'VIEW_NEWEST_POST'),
 		'RT_PAGE_NUMBER'		=> on_page($num_topics, $topics_per_page, $start),

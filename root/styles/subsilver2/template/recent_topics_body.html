@@ -46,12 +46,12 @@
 						<a href="{recenttopicrow.U_MCP_QUEUE}">{recenttopicrow.UNAPPROVED_IMG}</a>&nbsp;
 					<!-- ENDIF -->
 					<!-- IF recenttopicrow.S_TOPIC_REPORTED -->
-						<a href="{recenttopicrow.U_MCP_REPORT}">{REPORTED_IMG}</a>&nbsp;
+						<a href="{recenttopicrow.U_MCP_REPORT}">{recenttopicrow.REPORTED_IMG}</a>&nbsp;
 					<!-- ENDIF -->
 					<!-- IF recenttopicrow.PAGINATION -->
 						<p class="gensmall"> [ {GOTO_PAGE_IMG}{L_GOTO_PAGE}: {recenttopicrow.PAGINATION} ] </p>
 					<!-- ENDIF -->
-					<p class="gensmall">{L_POST_BY_AUTHOR} {recenttopicrow.LAST_POST_AUTHOR_FULL}
+					<p class="gensmall">{L_POST_BY_AUTHOR} {recenttopicrow.TOPIC_AUTHOR_FULL}
 					&raquo; {recenttopicrow.FIRST_POST_TIME}
 					<!-- IF recenttopicrow.U_VIEW_FORUM and recenttopicrow.FORUM_NAME -->
 						{L_IN} <a href="{recenttopicrow.U_VIEW_FORUM}" style="font-weight: bold;">{recenttopicrow.FORUM_NAME}</a>
