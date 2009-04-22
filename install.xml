@@ -24,7 +24,7 @@
 			</author>
 		</author-group>
 
-		<mod-version>1.0.3</mod-version>
+		<mod-version>1.0.4</mod-version>
 
 		<installation>
 			<level>easy</level>
@@ -45,10 +45,13 @@
 
 		<history>
 			<entry>
-				<date>YYYY-MM-DD</date>
-				<rev-version>X.Y.Z</rev-version>
+				<date>2009-04-22</date>
+				<rev-version>1.0.4</rev-version>
 				<changelog lang="en">
-					<change><![CDATA[Fixed pagination on non index.php (by DavidIQ)]]></change>
+					<change><![CDATA[[Fix] Several subsilver2 bugs: Show report-icon, topic-icons, correct topic-starter, correct topic-start-time]]></change>
+					<change><![CDATA[[Fix] Hide unapproved topics when not m_approve]]></change>
+					<change><![CDATA[[Fix] Increased performance]]></change>
+					<change><![CDATA[[Fix] Fixed pagination on non index.php (by DavidIQ)]]></change>
 				</changelog>
 			</entry>
 

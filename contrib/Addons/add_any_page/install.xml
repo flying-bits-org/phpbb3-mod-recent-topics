@@ -50,7 +50,7 @@ Natürlich solltet ihr durchgehend das gleiche Wort benutzen.]]></description>
 		<open src="example.php">
 			<edit>
 				<find><![CDATA[$template->assign_vars(array(]]></find>
-				<action type="before-add"><![CDATA[if($config['rt_example'])
+				<action type="before-add"><![CDATA[if ($config['rt_example'])
 {
 	if (!function_exists('display_recent_topics'))
 	{
