@@ -305,6 +305,7 @@ function display_recent_topics($topics_per_page, $num_pages, $excluded_topics)
 		'S_TOPIC_ICONS'			=> (sizeof($topic_icons)) ? true : false,
 		'RT_DISPLAY'			=> true,
 		'NEWEST_POST_IMG'		=> $user->img('icon_topic_newest', 'VIEW_NEWEST_POST'),
+		'LAST_POST_IMG'			=> $user->img('icon_topic_latest', 'VIEW_LATEST_POST'),
 		'RT_PAGE_NUMBER'		=> on_page($num_topics, $topics_per_page, $start),
 		'RT_PAGINATION'			=> generate_pagination(append_sid($phpbb_root_path . $user->page['page_name']), $num_topics, $topics_per_page, $start),
 	));
