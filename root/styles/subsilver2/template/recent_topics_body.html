@@ -1,9 +1,11 @@
 <div id="pagecontent">
-	<!-- IF PAGINATION -->
+	<!-- IF RT_PAGINATION -->
 		<table width="100%" cellspacing="1">
 		<tr>
-			<td class="nav" valign="middle" nowrap="nowrap">&nbsp;{PAGE_NUMBER}<br /></td>
-			<td class="gensmall" width="100%" align="{S_CONTENT_FLOW_END}" nowrap="nowrap"><!-- INCLUDE pagination.html --></td>
+			<td class="nav" valign="middle" nowrap="nowrap">&nbsp;{RT_PAGE_NUMBER}<br /></td>
+			<td class="gensmall" width="100%" align="{S_CONTENT_FLOW_END}" nowrap="nowrap">
+				<b><a href="#" onclick="jumpto(); return false;" title="{L_JUMP_TO_PAGE}">{L_GOTO_PAGE}</a> {RT_PAGINATION}</b>
+			</td>
 		</tr>
 		</table>
 	<!-- ENDIF -->
@@ -23,17 +25,6 @@
 		</tr>
 
 		<!-- BEGIN recenttopicrow -->
-
-			<!-- IF recenttopicrow.S_TOPIC_TYPE_SWITCH eq 1 -->
-				<tr>
-					<td class="row3" colspan="<!-- IF S_TOPIC_ICONS -->7<!-- ELSE -->6<!-- ENDIF -->"><b class="gensmall">{L_ANNOUNCEMENTS}</b></td>
-				</tr>
-			<!-- ELSEIF recenttopicrow.S_TOPIC_TYPE_SWITCH eq 0 -->
-				<tr>
-					<td class="row3" colspan="<!-- IF S_TOPIC_ICONS -->7<!-- ELSE -->6<!-- ENDIF -->"><b class="gensmall">{L_TOPICS}</b></td>
-				</tr>
-			<!-- ENDIF -->
-
 			<tr>
 				<td class="row1" width="25" align="center">{recenttopicrow.TOPIC_FOLDER_IMG}</td>
 				<!-- IF S_TOPIC_ICONS -->
