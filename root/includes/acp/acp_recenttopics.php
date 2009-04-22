@@ -4,10 +4,18 @@
 *
 * @package - NV recent topics
 * @version $Id$
-* @copyright (c) nickvergessen ( http://mods.flying-bits.org/ )
+* @copyright (c) nickvergessen ( http://www.flying-bits.org/ )
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
 */
+
+/**
+* @ignore
+*/
+if (!defined('IN_PHPBB'))
+{
+	exit;
+}
 
 /**
 * @package acp
@@ -33,12 +41,13 @@ class acp_recenttopics
 			{
 				trigger_error('FORM_INVALID');
 			}
-			// request_var should be '' as it is a string ("1,2,3928") here, not a integer.
+			// request_var should be '' as it is a string ("1, 2, 3928") here, not a integer.
 			// But this would end up in a SQL-Error, that's why I ended up with adding the 0 in it.
 			set_config('rt_anti_topics', request_var('rt_anti_topics', '0'));
 			set_config('rt_number', request_var('rt_number', 5));
 			set_config('rt_page_number', request_var('rt_page_number', 0));
 			set_config('rt_index', request_var('rt_index', 0));
+
 			trigger_error($user->lang['RT_SAVED'] . adm_back_link($this->u_action));
 		}
 		$template->assign_vars(array(
