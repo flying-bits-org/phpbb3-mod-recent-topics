@@ -1,7 +1,9 @@
-<!-- IF PAGINATION -->
+<!-- IF RT_PAGINATION -->
+<div class="topic-actions">
 	<div class="pagination">
-		{PAGE_NUMBER}<!-- IF PAGINATION --> &bull; <span>{PAGINATION}</span><!-- ENDIF -->
+		<a href="#" onclick="jumpto(); return false;" title="{L_JUMP_TO_PAGE}">{RT_PAGE_NUMBER}</a> &bull; <span>{RT_PAGINATION}</span>
 	</div>
+</div>
 <!-- ENDIF -->
 <!-- BEGIN recenttopicrow -->
 	<!-- IF not recenttopicrow.S_TOPIC_TYPE_SWITCH and not recenttopicrow.S_FIRST_ROW -->
