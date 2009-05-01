@@ -40,7 +40,7 @@
 
 	<action-group>
 		<copy>
-			<file from="root/styles/subsilver2/template/recent_topics_body.html" to="style/subsilver2/template/recent_topics_body.html" />
+			<file from="root/styles/subsilver2/template/recent_topics_body.html" to="styles/subsilver2/template/recent_topics_body.html" />
 		</copy>
 
 		<open src="styles/subsilver2/template/index_body.html">

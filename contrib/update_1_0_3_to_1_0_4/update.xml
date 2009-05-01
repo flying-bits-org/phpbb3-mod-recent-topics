@@ -48,7 +48,7 @@
 			<file from="root/install/index.php" to="install/index.php" />
 			<file from="root/install/style/*.*" to="install/style/*.*" />
 			<file from="root/language/en/mods/*.*" to="language/en/mods/*.*" />
-			<file from="root/style/prosilver/template/recent_topics_body.html" to="style/prosilver/template/recent_topics_body.html" />
+			<file from="root/styles/prosilver/template/recent_topics_body.html" to="styles/prosilver/template/recent_topics_body.html" />
 		</copy>
 
 		<open src="index.php">
