@@ -40,8 +40,7 @@
 
 	<action-group>
 		<copy>
-			<file from="root/language/de/mods/info_acp_recenttopics.php" to="language/de/mods/info_acp_recenttopics.php" />
-			<file from="root/language/de/mods/lang_install_rt.php" to="language/de/mods/lang_install_rt.php" />
+			<file from="root/language/de/mods/*.*" to="language/de/mods/*.*" />
 		</copy>
 
 		<diy-instructions lang="en"><![CDATA[Browse to install/index.php and run the installer]]></diy-instructions>
