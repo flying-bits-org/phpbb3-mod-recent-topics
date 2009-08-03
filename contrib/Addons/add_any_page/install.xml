@@ -30,12 +30,12 @@ Natürlich solltet ihr durchgehend das gleiche Wort benutzen.]]></description>
 			</author>
 		</author-group>
 
-		<mod-version>1.0.4</mod-version>
+		<mod-version>1.0.5</mod-version>
 
 		<installation>
 			<level>easy</level>
 			<time>240</time>
-			<target-version>3.0.4</target-version>
+			<target-version>3.0.5</target-version>
 		</installation>
 
 		<link-group>
@@ -56,7 +56,7 @@ Natürlich solltet ihr durchgehend das gleiche Wort benutzen.]]></description>
 	{
 		include($phpbb_root_path . 'includes/functions_recenttopics.' . $phpEx);
 	}
-	display_recent_topics($config['rt_number'], $config['rt_page_number'], $config['rt_anti_topics']);
+	display_recent_topics($config['rt_number'], $config['rt_page_number'], $config['rt_anti_topics'], 'recent_topics', request_var('f', 0), true);
 }]]></action>
 			</edit>
 		</open>
@@ -98,7 +98,7 @@ Natürlich solltet ihr durchgehend das gleiche Wort benutzen.]]></description>
 		<open src="styles/prosilver/template/example_body.html">
 			<edit>
 				<find><![CDATA[<!-- where you like it to be -->]]></find>
-				<action type="after-add"><![CDATA[<!-- IF RT_DISPLAY --><!-- INCLUDE recent_topics_body.html --><!-- ENDIF -->]]></action>
+				<action type="after-add"><![CDATA[<!-- IF RECENT_TOPICS_DISPLAY --><!-- INCLUDE recent_topics_body.html --><!-- ENDIF -->]]></action>
 			</edit>
 		</open>
 

@@ -24,18 +24,105 @@ if (!function_exists('display_forums'))
 
 $user->add_lang('mods/info_acp_recenttopics');
 
-function display_recent_topics($topics_per_page, $num_pages, $excluded_topics)
+/**
+* Since #48835 is a will not fix, we copy the function and make it work, else it is just a simple cut'n'paste
+*/
+function recent_topics_generate_pagination($base_url, $num_items, $per_page, $start_item, $add_prevnext_text = false, $tpl_prefix = '', $start_item_name = '')
+{
+	global $template, $user;
+
+	// Make sure $per_page is a valid value
+	$per_page = ($per_page <= 0) ? 1 : $per_page;
+
+	$seperator = '<span class="page-sep">' . $user->lang['COMMA_SEPARATOR'] . '</span>';
+	$total_pages = ceil($num_items / $per_page);
+
+	if ($total_pages == 1 || !$num_items)
+	{
+		return false;
+	}
+
+	$on_page = floor($start_item / $per_page) + 1;
+	$url_delim = (strpos($base_url, '?') === false) ? '?' : '&amp;';
+
+	$page_string = ($on_page == 1) ? '<strong>1</strong>' : '<a href="' . $base_url . '">1</a>';
+
+	if ($total_pages > 5)
+	{
+		$start_cnt = min(max(1, $on_page - 4), $total_pages - 5);
+		$end_cnt = max(min($total_pages, $on_page + 4), 6);
+
+		$page_string .= ($start_cnt > 1) ? ' ... ' : $seperator;
+
+		for ($i = $start_cnt + 1; $i < $end_cnt; $i++)
+		{
+			$page_string .= ($i == $on_page) ? '<strong>' . $i . '</strong>' : '<a href="' . $base_url . "{$url_delim}{$start_item_name}=" . (($i - 1) * $per_page) . '">' . $i . '</a>';
+			if ($i < $end_cnt - 1)
+			{
+				$page_string .= $seperator;
+			}
+		}
+
+		$page_string .= ($end_cnt < $total_pages) ? ' ... ' : $seperator;
+	}
+	else
+	{
+		$page_string .= $seperator;
+
+		for ($i = 2; $i < $total_pages; $i++)
+		{
+			$page_string .= ($i == $on_page) ? '<strong>' . $i . '</strong>' : '<a href="' . $base_url . "{$url_delim}{$start_item_name}=" . (($i - 1) * $per_page) . '">' . $i . '</a>';
+			if ($i < $total_pages)
+			{
+				$page_string .= $seperator;
+			}
+		}
+	}
+
+	$page_string .= ($on_page == $total_pages) ? '<strong>' . $total_pages . '</strong>' : '<a href="' . $base_url . "{$url_delim}{$start_item_name}=" . (($total_pages - 1) * $per_page) . '">' . $total_pages . '</a>';
+
+	if ($add_prevnext_text)
+	{
+		if ($on_page != 1)
+		{
+			$page_string = '<a href="' . $base_url . "{$url_delim}{$start_item_name}=" . (($on_page - 2) * $per_page) . '">' . $user->lang['PREVIOUS'] . '</a>&nbsp;&nbsp;' . $page_string;
+		}
+
+		if ($on_page != $total_pages)
+		{
+			$page_string .= '&nbsp;&nbsp;<a href="' . $base_url . "{$url_delim}{$start_item_name}=" . ($on_page * $per_page) . '">' . $user->lang['NEXT'] . '</a>';
+		}
+	}
+
+	$template->assign_vars(array(
+		$tpl_prefix . 'BASE_URL'		=> $base_url,
+		'A_' . $tpl_prefix . 'BASE_URL'	=> addslashes($base_url),
+		$tpl_prefix . 'PER_PAGE'		=> $per_page,
+
+		$tpl_prefix . 'PREVIOUS_PAGE'	=> ($on_page == 1) ? '' : $base_url . "{$url_delim}{$start_item_name}=" . (($on_page - 2) * $per_page),
+		$tpl_prefix . 'NEXT_PAGE'		=> ($on_page == $total_pages) ? '' : $base_url . "{$url_delim}{$start_item_name}=" . ($on_page * $per_page),
+		$tpl_prefix . 'TOTAL_PAGES'		=> $total_pages,
+	));
+
+	return $page_string;
+}
+
+function display_recent_topics($topics_per_page, $num_pages, $excluded_topics, $tpl_loopname = 'recenttopicrow', $spec_forum_id = 0, $include_subforums = true)
 {
 	global $auth, $cache, $config, $db, $template, $user;
 	global $phpbb_root_path, $phpEx;
 
-
-	$spec_forum_id	= request_var('f', 0);
-	$start			= request_var('start', 0);
+	/**
+	* Set some internal needed variables
+	*/
+	$start = request_var($tpl_loopname . '_start', 0);
 	$excluded_topic_ids = explode(', ', $excluded_topics);
 	$total_limit	= $topics_per_page * $num_pages;
 	$ga_forum_id	= 0; // Forum id we use for global announcements
 
+	/**
+	* Get the forums we take our topics from
+	*/
 	// Get the allowed forums
 	$forum_ary = array();
 	$forum_read_ary = $auth->acl_getf('f_read');
@@ -46,47 +133,82 @@ function display_recent_topics($topics_per_page, $num_pages, $excluded_topics)
 			$forum_ary[] = (int) $forum_id;
 		}
 	}
-	$forum_ary = array_unique($forum_ary);
-	if (!sizeof($forum_ary))
+	$forum_ids = array_unique($forum_ary);
+
+	if (!sizeof($forum_ids))
 	{
+		// No forums with f_read
 		return;
 	}
 
-	// Only call the query, if we need to
 	$spec_forum_ary = array();
 	if ($spec_forum_id)
 	{
-		$spec_forum_ary = array($spec_forum_id);
-		$sql = 'SELECT parent_id, forum_id
-			FROM ' . FORUMS_TABLE . '
-			WHERE ' . $db->sql_in_set('forum_id', $forum_ary) . '
-			ORDER BY left_id';
-		$result = $db->sql_query($sql);
-		while ($row = $db->sql_fetchrow($result))
+		// Only take a special-forum
+		if (!$include_subforums)
 		{
-			if (in_array($row['parent_id'], $spec_forum_ary))
+			if (!in_array($spec_forum_id, $forum_ids))
+			{
+				return;
+			}
+			$forum_ids = array();
+			$sql = 'SELECT 1 as display_forum
+				FROM ' . FORUMS_TABLE . '
+				WHERE forum_id = ' . $spec_forum_id . '
+					AND forum_recent_topics = 1';
+			$result = $db->sql_query_limit($sql, 1);
+			$display_forum = (bool) $db->sql_fetchfield('display_forum');
+			$db->sql_freeresult($result);
+
+			if ($display_forum)
+			{
+				$forum_ids = array($spec_forum_id);
+			}
+		}
+		else
+		{
+			// ... and it's subforums
+			$sql = 'SELECT f2.forum_id
+				FROM ' . FORUMS_TABLE . ' f1
+				LEFT JOIN ' . FORUMS_TABLE . " f2
+					ON (f2.left_id BETWEEN f1.left_id AND f1.right_id
+						AND f2.forum_recent_topics = 1)
+				WHERE f1.forum_id = $spec_forum_id
+					AND f1.forum_recent_topics = 1
+				ORDER BY f2.left_id DESC";
+			$result = $db->sql_query($sql);
+
+			while ($row = $db->sql_fetchrow($result))
 			{
 				$spec_forum_ary[] = $row['forum_id'];
 			}
+			$db->sql_freeresult($result);
+
+			$forum_ids = array_intersect($forum_ids, $spec_forum_ary);
+
+			if (!sizeof($forum_ids))
+			{
+				return;
+			}
+		}
+	}
+	else
+	{
+		$sql = 'SELECT forum_id
+			FROM ' . FORUMS_TABLE . '
+			WHERE ' . $db->sql_in_set('forum_id', $forum_ids) . '
+				AND forum_recent_topics = 1';
+		$result = $db->sql_query($sql);
+
+		$forum_ids = array();
+		while ($row = $db->sql_fetchrow($result))
+		{
+			$forum_ids[] = $row['forum_id'];
 		}
 		$db->sql_freeresult($result);
 	}
 
-	$sql = 'SELECT forum_id
-		FROM ' . FORUMS_TABLE . '
-		WHERE ' . $db->sql_in_set('forum_id', $forum_ary) . '
-			' . ((sizeof($spec_forum_ary)) ? ' AND ' . $db->sql_in_set('forum_id', $spec_forum_ary) : '') . '
-			AND forum_recent_topics = 1';
-	$result = $db->sql_query($sql);
-
-	$forum_ids = array();
-	while ($row = $db->sql_fetchrow($result))
-	{
-		$forum_ids[] = $row['forum_id'];
-	}
-	$db->sql_freeresult($result);
-
-	// No forums with f_view
+	// No forums with f_read
 	if (!sizeof($forum_ids))
 	{
 		return;
@@ -244,7 +366,7 @@ function display_recent_topics($topics_per_page, $num_pages, $excluded_topics)
 			$topic_icons[] = $topic_id;
 		}
 
-		$template->assign_block_vars('recenttopicrow', array(
+		$template->assign_block_vars($tpl_loopname, array(
 			'FORUM_ID'					=> $forum_id,
 			'TOPIC_ID'					=> $topic_id,
 			'TOPIC_AUTHOR_FULL'			=> get_username_string('full', $row['topic_poster'], $row['topic_first_poster_name'], $row['topic_first_poster_colour']),
@@ -301,16 +423,27 @@ function display_recent_topics($topics_per_page, $num_pages, $excluded_topics)
 	}
 	$db->sql_freeresult($result);
 
+	// Get URL-parameters for pagination
+	$url_params = explode('&', $user->page['query_string']);
+	$append_params = false;
+	foreach ($url_params as $param)
+	{
+		if (!$param) continue;
+		list($name, $value) = explode('=', $param);
+		if ($name != $tpl_loopname . '_start')
+		{
+			$append_params[$name] = $value;
+		}
+	}
+
 	$template->assign_vars(array(
 		'S_TOPIC_ICONS'			=> (sizeof($topic_icons)) ? true : false,
-		'RT_DISPLAY'			=> true,
 		'NEWEST_POST_IMG'		=> $user->img('icon_topic_newest', 'VIEW_NEWEST_POST'),
 		'LAST_POST_IMG'			=> $user->img('icon_topic_latest', 'VIEW_LATEST_POST'),
-		'RT_PAGE_NUMBER'		=> on_page($num_topics, $topics_per_page, $start),
-		'RT_PAGINATION'			=> generate_pagination(append_sid($phpbb_root_path . $user->page['page_name']), $num_topics, $topics_per_page, $start),
+		strtoupper($tpl_loopname) . '_DISPLAY'		=> true,
+		strtoupper($tpl_loopname) . '_PAGE_NUMBER'	=> on_page($num_topics, $topics_per_page, $start),
+		strtoupper($tpl_loopname) . '_PAGINATION'	=> recent_topics_generate_pagination(append_sid($phpbb_root_path . $user->page['page_name'], $append_params), $num_topics, $topics_per_page, $start, false, strtoupper($tpl_loopname), $tpl_loopname . '_start'),
 	));
-
 }
-
 
 ?>

@@ -24,17 +24,17 @@
 			</author>
 		</author-group>
 
-		<mod-version>1.0.4</mod-version>
+		<mod-version>1.0.5</mod-version>
 
 		<installation>
 			<level>easy</level>
 			<time>300</time>
-			<target-version>3.0.4</target-version>
+			<target-version>3.0.5</target-version>
 		</installation>
 
 		<link-group>
-			<link type="parent" lang="de" href="contrib/update_1_0_2_to_1_0_3/update.xml">Update von 1.0.2 auf 1.0.3</link>
-			<link type="parent" lang="en" href="contrib/update_1_0_2_to_1_0_3/update.xml">Update from 1.0.2 to 1.0.3</link>
+			<link type="parent" lang="de" href="contrib/update_1_0_4_to_1_0_5/update.xml">Update von 1.0.4 auf 1.0.5</link>
+			<link type="parent" lang="en" href="contrib/update_1_0_4_to_1_0_5/update.xml">Update from 1.0.4 to 1.0.5</link>
 			<link type="language" lang="de" href="contrib/de.xml">Anleitung für das deutsche Sprachpaket</link>
 			<link type="language" lang="en" href="contrib/de.xml">Manual for German Language-set</link>
 			<link type="template" lang="de" href="contrib/subsilver2.xml">Anleitung für das Style subsilver2</link>
@@ -44,6 +44,18 @@
 		</link-group>
 
 		<history>
+			<entry>
+				<date>2009-08-03</date>
+				<rev-version>1.0.5</rev-version>
+				<changelog lang="en">
+					<change><![CDATA[[Fix] Correctly describe behaviour with 1 and 0 pages.]]></change>
+					<change><![CDATA[[Fix] Correctly build pagination with parameters]]></change>
+					<change><![CDATA[[Fix] Take all subforums in account when pulling recent topics]]></change>
+
+					<change><![CDATA[[Feature] Make it possible to view two different recent topic boxes on one page]]></change>
+				</changelog>
+			</entry>
+
 			<entry>
 				<date>2009-04-22</date>
 				<rev-version>1.0.4</rev-version>
@@ -100,10 +112,10 @@
 			<file from="root/includes/functions_recenttopics.php" to="includes/functions_recenttopics.php" />
 			<file from="root/includes/acp/acp_recenttopics.php" to="includes/acp/acp_recenttopics.php" />
 			<file from="root/includes/acp/info/acp_recenttopics.php" to="includes/acp/info/acp_recenttopics.php" />
-			<file from="root/install/index.php" to="install/index.php" />
-			<file from="root/install/style/*.*" to="install/style/*.*" />
+			<file from="root/install/*.*" to="install/*.*" />
 			<file from="root/language/en/mods/*.*" to="language/en/mods/*.*" />
 			<file from="root/styles/prosilver/template/recent_topics_body.html" to="styles/prosilver/template/recent_topics_body.html" />
+			<file from="root/umil/*.*" to="umil/*.*" />
 		</copy>
 
 		<open src="index.php">
@@ -115,7 +127,7 @@
 	{
 		include($phpbb_root_path . 'includes/functions_recenttopics.' . $phpEx);
 	}
-	display_recent_topics($config['rt_number'], $config['rt_page_number'], $config['rt_anti_topics']);
+	display_recent_topics($config['rt_number'], $config['rt_page_number'], $config['rt_anti_topics'], 'recent_topics', request_var('f', 0), true);
 }]]></action>
 			</edit>
 		</open>
@@ -156,7 +168,7 @@
 		<open src="styles/prosilver/template/index_body.html">
 			<edit>
 				<find><![CDATA[<!-- IF S_DISPLAY_SEARCH or (S_USER_LOGGED_IN and not S_IS_BOT) -->]]></find>
-				<action type="before-add"><![CDATA[<!-- IF RT_DISPLAY --><!-- INCLUDE recent_topics_body.html --><!-- ENDIF -->]]></action>
+				<action type="before-add"><![CDATA[<!-- IF RECENT_TOPICS_DISPLAY --><!-- INCLUDE recent_topics_body.html --><!-- ENDIF -->]]></action>
 			</edit>
 		</open>
 

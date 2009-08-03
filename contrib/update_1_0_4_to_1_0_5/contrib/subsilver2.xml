@@ -40,8 +40,15 @@
 
 	<action-group>
 		<copy>
-			<file from="root/language/de/mods/*.*" to="language/de/mods/*.*" />
+			<file from="root/styles/subsilver2/template/recent_topics_body.html" to="styles/subsilver2/template/recent_topics_body.html" />
 		</copy>
+
+		<open src="styles/subsilver2/template/index_body.html">
+			<edit>
+				<find><![CDATA[<!-- IF RT_DISPLAY --><!-- INCLUDE recent_topics_body.html --><!-- ENDIF -->]]></find>
+				<action type="replace-with"><![CDATA[<!-- IF RECENT_TOPICS_DISPLAY --><!-- INCLUDE recent_topics_body.html --><!-- ENDIF -->]]></action>
+			</edit>
+		</open>
 
 		<diy-instructions lang="en"><![CDATA[Browse to install/index.php and run the installer]]></diy-instructions>
 		<diy-instructions lang="de"><![CDATA[install/index.php aufrufen und ausführen]]></diy-instructions>

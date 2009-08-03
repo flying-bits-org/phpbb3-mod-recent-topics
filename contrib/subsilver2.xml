@@ -24,12 +24,12 @@
 			</author>
 		</author-group>
 
-		<mod-version>1.0.4</mod-version>
+		<mod-version>1.0.5</mod-version>
 
 		<installation>
 			<level>easy</level>
 			<time>300</time>
-			<target-version>3.0.4</target-version>
+			<target-version>3.0.5</target-version>
 		</installation>
 
 		<link-group>
@@ -46,7 +46,7 @@
 		<open src="styles/subsilver2/template/index_body.html">
 			<edit>
 				<find><![CDATA[<!-- INCLUDE forumlist_body.html -->]]></find>
-				<action type="before-add"><![CDATA[<!-- IF RT_DISPLAY --><!-- INCLUDE recent_topics_body.html --><!-- ENDIF -->]]></action>
+				<action type="before-add"><![CDATA[<!-- IF RECENT_TOPICS_DISPLAY --><!-- INCLUDE recent_topics_body.html --><!-- ENDIF -->]]></action>
 			</edit>
 		</open>
 
