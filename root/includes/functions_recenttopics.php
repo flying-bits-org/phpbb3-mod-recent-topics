@@ -17,7 +17,7 @@ if (!defined('IN_PHPBB'))
 	exit;
 }
 
-if (!function_exists('display_forums'))
+if (!function_exists('display_forums') || !function_exists('topic_status'))
 {
 	include($phpbb_root_path . 'includes/functions_display.' . $phpEx);
 }
@@ -226,32 +226,54 @@ function display_recent_topics($topics_per_page, $num_pages, $excluded_topics, $
 	}
 
 	// Get the allowed topics
-	$sql = 'SELECT forum_id, topic_id, topic_type
-		FROM ' . TOPICS_TABLE . '
-		WHERE ((' . $db->sql_in_set('topic_id', $excluded_topic_ids, true) . '
-				AND ' . $db->sql_in_set('forum_id', $forum_ids) . ')
-			OR topic_type = ' . POST_GLOBAL . ')
-			AND topic_status <> ' . ITEM_MOVED . '
-			AND (' . $db->sql_in_set('forum_id', $m_approve_ids, false, true) . '
-				OR topic_approved = 1)
-		ORDER BY topic_last_post_time DESC';
+	$sql = $db->sql_build_query('SELECT', array(
+		'SELECT'	=> 't.forum_id, t.topic_id, t.topic_type, t.icon_id, tt.mark_time, ft.mark_time as f_mark_time',
+		'FROM'		=> array(TOPICS_TABLE => 't'),
+		'LEFT_JOIN'	=> array(
+			array(
+				'FROM'	=> array(TOPICS_TRACK_TABLE => 'tt'),
+				'ON'	=> 'tt.topic_id = t.topic_id AND tt.user_id = ' . $user->data['user_id'],
+			),
+			array(
+				'FROM'	=> array(FORUMS_TRACK_TABLE => 'ft'),
+				'ON'	=> 'ft.forum_id = t.forum_id AND ft.user_id = ' . $user->data['user_id'],
+			),
+		),
+		'WHERE'		=> '
+			(
+				(' . $db->sql_in_set('t.topic_id', $excluded_topic_ids, true) . '
+					AND ' . $db->sql_in_set('t.forum_id', $forum_ids) . '
+				)
+				OR t.topic_type = ' . POST_GLOBAL . '
+			)
+			AND t.topic_status <> ' . ITEM_MOVED . '
+			AND (' . $db->sql_in_set('t.forum_id', $m_approve_ids, false, true) . '
+				OR t.topic_approved = 1)',
+		'ORDER_BY'	=> 't.topic_last_post_time DESC',
+	));
 	$result = $db->sql_query_limit($sql, $total_limit);
 
 	$forums = $ga_topic_ids = $topic_ids = array();
 	$num_topics = 0;
+	$obtain_icons = false;
 	while ($row = $db->sql_fetchrow($result))
 	{
 		$num_topics++;
 		if (($num_topics > $start) && ($num_topics <= ($start + $topics_per_page)))
 		{
 			$topic_ids[] = $row['topic_id'];
-			if ($row['topic_type'] == POST_GLOBAL)
+
+			$rowset[$row['topic_id']] = $row;
+			if (!isset($forums[$row['forum_id']]) && $user->data['is_registered'] && $config['load_db_lastread'])
 			{
-				$ga_topic_ids[] = $row['topic_id'];
+				$forums[$row['forum_id']]['mark_time'] = $row['f_mark_time'];
 			}
-			else
+			$forums[$row['forum_id']]['topic_list'][] = $row['topic_id'];
+			$forums[$row['forum_id']]['rowset'][$row['topic_id']] = &$rowset[$row['topic_id']];
+
+			if ($row['icon_id'] && $auth->acl_get('f_icons', $row['forum_id']))
 			{
-				$forums[$row['forum_id']][] = $row['topic_id'];
+				$obtain_icons = true;
 			}
 		}
 	}
@@ -264,26 +286,54 @@ function display_recent_topics($topics_per_page, $num_pages, $excluded_topics, $
 	}
 
 	// Grab icons
-	$icons = $cache->obtain_icons();
+	if ($obtain_icons)
+	{
+		$icons = $cache->obtain_icons();
+	}
+	else
+	{
+		$icons = array();
+	}
+
+	// Borrowed from search.php
+	foreach ($forums as $forum_id => $forum)
+	{
+		if ($user->data['is_registered'] && $config['load_db_lastread'])
+		{
+			$topic_tracking_info[$forum_id] = get_topic_tracking($forum_id, $forum['topic_list'], $forum['rowset'], array($forum_id => $forum['mark_time']), ($forum_id) ? false : $forum['topic_list']);
+		}
+		else if ($config['load_anon_lastread'] || $user->data['is_registered'])
+		{
+			$tracking_topics = (isset($_COOKIE[$config['cookie_name'] . '_track'])) ? ((STRIP) ? stripslashes($_COOKIE[$config['cookie_name'] . '_track']) : $_COOKIE[$config['cookie_name'] . '_track']) : '';
+			$tracking_topics = ($tracking_topics) ? tracking_unserialize($tracking_topics) : array();
+
+			$topic_tracking_info[$forum_id] = get_complete_topic_tracking($forum_id, $forum['topic_list'], ($forum_id) ? false : $forum['topic_list']);
+
+			if (!$user->data['is_registered'])
+			{
+				$user->data['user_lastmark'] = (isset($tracking_topics['l'])) ? (int) (base_convert($tracking_topics['l'], 36, 10) + $config['board_startdate']) : 0;
+			}
+		}
+	}
 
 	// Now only pull the data of the requested topics
-	$sql = 'SELECT t.*, i.icons_url, i.icons_width, i.icons_height, tp.topic_posted, f.forum_name
-		FROM ' . TOPICS_TABLE . ' t
-		LEFT JOIN ' . TOPICS_POSTED_TABLE . ' tp
-			ON (t.topic_id = tp.topic_id
-				AND tp.user_id = ' . $user->data['user_id'] . ')
-		LEFT JOIN ' . FORUMS_TABLE . ' f
-			ON f.forum_id = t.forum_id
-		LEFT JOIN ' . ICONS_TABLE . ' i
-			ON t.icon_id = i.icons_id
-		WHERE ' . $db->sql_in_set('t.topic_id', $topic_ids) . '
-		ORDER BY t.topic_last_post_time DESC';
+	$sql = $db->sql_build_query('SELECT', array(
+		'SELECT'	=> 't.*, tp.topic_posted, f.forum_name',
+		'FROM'		=> array(TOPICS_TABLE => 't'),
+		'LEFT_JOIN'	=> array(
+			array(
+				'FROM'	=> array(TOPICS_POSTED_TABLE => 'tp'),
+				'ON'	=> 't.topic_id = tp.topic_id AND tp.user_id = ' . $user->data['user_id'],
+			),
+			array(
+				'FROM'	=> array(FORUMS_TABLE => 'f'),
+				'ON'	=> 'f.forum_id = t.forum_id',
+			),
+		),
+		'WHERE'		=> $db->sql_in_set('t.topic_id', $topic_ids),
+		'ORDER_BY'	=> 't.topic_last_post_time DESC',
+	));
 	$result = $db->sql_query_limit($sql, $topics_per_page);
-
-	foreach ($forums as $forum_id => $topic_ids)
-	{
-		$topic_tracking_info[$forum_id] = get_complete_topic_tracking($forum_id, $topic_ids, $ga_topic_ids);
-	}
 
 	$topic_icons = array();
 	while ($row = $db->sql_fetchrow($result))
@@ -310,50 +360,9 @@ function display_recent_topics($topics_per_page, $num_pages, $excluded_topics, $
 
 		$s_type_switch_test = ($row['topic_type'] == POST_ANNOUNCE || $row['topic_type'] == POST_GLOBAL) ? 1 : 0;
 		$replies = ($auth->acl_get('m_approve', $forum_id)) ? $row['topic_replies_real'] : $row['topic_replies'];
-		$unread_topic = (isset($topic_tracking_info[$forum_id][$topic_id]) && $row['topic_last_post_time'] > $topic_tracking_info[$forum_id][$topic_id]) ? true : false;
+		topic_status($row, $replies, (isset($topic_tracking_info[$forum_id][$row['topic_id']]) && $row['topic_last_post_time'] > $topic_tracking_info[$forum_id][$row['topic_id']]) ? true : false, $folder_img, $folder_alt, $topic_type);
 
-		$folder_img = $folder_alt = $topic_type = '';
-		switch ($row['topic_type'])
-		{
-			case POST_GLOBAL:
-				$topic_type = $user->lang['VIEW_TOPIC_GLOBAL'];
-				$folder_img = (!$unread_topic) ? 'global_read' : 'global_unread';
-			break;
-			case POST_ANNOUNCE:
-				$topic_type = $user->lang['VIEW_TOPIC_ANNOUNCEMENT'];
-				$folder_img = (!$unread_topic) ? 'announce_read' : 'announce_unread';
-			break;
-			case POST_STICKY:
-				$topic_type = $user->lang['VIEW_TOPIC_STICKY'];
-				$folder_img = (!$unread_topic) ? 'sticky_read' : 'sticky_unread';
-			break;
-			default:
-				$topic_type = '';
-				$folder_img = (!$unread_topic) ? 'topic_read' : 'topic_unread';
-				if ($config['hot_threshold'] && $replies >= $config['hot_threshold'] && $row['topic_status'] != ITEM_LOCKED)
-				{
-					$folder_img .= '_hot';
-				}
-			break;
-		}
-		if ($row['topic_status'] == ITEM_LOCKED)
-		{
-			$topic_type = $user->lang['VIEW_TOPIC_LOCKED'];
-			$folder_img .= '_locked';
-		}
-		if ($row['topic_posted'])
-		{
-			$folder_img .= '_mine';
-		}
-		if ($row['topic_type'] == POST_GLOBAL)
-		{
-			$global_announce_list[$row['topic_id']] = true;
-		}
-		$folder_alt = ($unread_topic) ? 'NEW_POSTS' : (($row['topic_status'] == ITEM_LOCKED) ? 'TOPIC_LOCKED' : 'NO_NEW_POSTS');
-		if ($row['poll_start'] && $row['topic_status'] != ITEM_MOVED)
-		{
-			$topic_type = $user->lang['VIEW_TOPIC_POLL'];
-		}
+		$unread_topic = (isset($topic_tracking_info[$forum_id][$row['topic_id']]) && $row['topic_last_post_time'] > $topic_tracking_info[$forum_id][$row['topic_id']]) ? true : false;
 
 		$view_topic_url = append_sid("{$phpbb_root_path}viewtopic.$phpEx", 'f=' . $forum_id . '&amp;t=' . $topic_id);
 		$view_forum_url = append_sid("{$phpbb_root_path}viewforum.$phpEx", 'f=' . $forum_id);
