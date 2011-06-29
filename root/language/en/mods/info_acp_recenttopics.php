@@ -19,16 +19,18 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, array(
 	'RECENT_TOPICS'						=> 'Recent topics',
-	'RECENT_TOPICS_MOD'					=> '"Recent topics" MOD',
+	'RECENT_TOPICS_LIST'				=> 'View on “recent topics”',
+	'RECENT_TOPICS_LIST_EXPLAIN'		=> 'Shall topics of this forum be displayed on the index in “recent topics”?',
+	'RECENT_TOPICS_MOD'					=> '“Recent topics” MOD',
+
 	'RT_CONFIG'							=> 'Configuration',
 	'RT_ANTI_TOPICS'					=> 'Excluded topics',
-	'RT_ANTI_TOPICS_EXP'				=> 'Seperated by ", " (Example: "7, 9")<br />If you don\'t want to exclude a topic, just enter 0.',
+	'RT_ANTI_TOPICS_EXP'				=> 'Seperated by “, ” (Example: “7, 9”)<br />If you don’t want to exclude a topic, just enter 0.',
 	'RT_NUMBER'							=> 'Recent topics',
 	'RT_NUMBER_EXP'						=> 'Number of topics displayed on the index.',
 	'RT_PAGE_NUMBER'					=> 'Recent topics pages',
 	'RT_PAGE_NUMBER_EXP'				=> 'You can display some more recent topics on a little pagination. Just enter 1 to disable this feature. If you enter 0 there will be so much pages as needed to display all topics.',
-	'RECENT_TOPICS_LIST'				=> 'View on "recent topics"',
-	'RECENT_TOPICS_LIST_EXPLAIN'		=> 'Shall topics of this forum be displayed on the index in "recent topics"?',
+	'RT_PARENTS'						=> 'Display parent forums',
 	'RT_SAVED'							=> 'Saved adjustments.',
 
 	'RT_VIEW_ON'		=> 'view NV recent-topics on',
@@ -46,12 +48,12 @@ $lang = array_merge($lang, array(
 	'RT_OTHERS'			=> 'other Site',
 
 	// Installer
-	'INSTALL_RECENT_TOPICS_MOD'				=> 'Install "Recent topics" MOD',
-	'INSTALL_RECENT_TOPICS_MOD_CONFIRM'		=> 'Are you sure you want to install the "Recent topics" MOD?',
-	'UPDATE_RECENT_TOPICS_MOD'				=> 'Update "Recent topics" MOD',
-	'UPDATE_RECENT_TOPICS_MOD_CONFIRM'		=> 'Are you sure you want to update the "Recent topics" MOD?',
-	'UNINSTALL_RECENT_TOPICS_MOD'			=> 'Uninstall "Recent topics" MOD',
-	'UNINSTALL_RECENT_TOPICS_MOD_CONFIRM'	=> 'Are you sure you want to uninstall the "Recent topics" MOD?',
+	'INSTALL_RECENT_TOPICS_MOD'				=> 'Install “Recent topics” MOD',
+	'INSTALL_RECENT_TOPICS_MOD_CONFIRM'		=> 'Are you sure you want to install the “Recent topics” MOD?',
+	'UPDATE_RECENT_TOPICS_MOD'				=> 'Update “Recent topics” MOD',
+	'UPDATE_RECENT_TOPICS_MOD_CONFIRM'		=> 'Are you sure you want to update the “Recent topics” MOD?',
+	'UNINSTALL_RECENT_TOPICS_MOD'			=> 'Uninstall “Recent topics” MOD',
+	'UNINSTALL_RECENT_TOPICS_MOD_CONFIRM'	=> 'Are you sure you want to uninstall the “Recent topics” MOD?',
 ));
 
 ?>

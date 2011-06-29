@@ -134,7 +134,7 @@
 	{
 		include($phpbb_root_path . 'includes/functions_recenttopics.' . $phpEx);
 	}
-	display_recent_topics($config['rt_number'], $config['rt_page_number'], $config['rt_anti_topics'], 'recent_topics', request_var('f', 0), true);
+	display_recent_topics($config['rt_number'], $config['rt_page_number'], $config['rt_anti_topics'], 'recent_topics', request_var('f', 0), true, $config['rt_parents']);
 }]]></action>
 			</edit>
 		</open>
