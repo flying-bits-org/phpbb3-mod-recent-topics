@@ -51,6 +51,13 @@
 			<file from="root/umil/*.*" to="umil/*.*" />
 		</copy>
 
+		<open src="index.php">
+			<edit>
+				<find><![CDATA[display_recent_topics($config['rt_number'], $config['rt_page_number'], $config['rt_anti_topics'], 'recent_topics', request_var('f', 0), true);]]></find>
+				<action type="replace-with"><![CDATA[display_recent_topics($config['rt_number'], $config['rt_page_number'], $config['rt_anti_topics'], 'recent_topics', request_var('f', 0), true, $config['rt_parents']);]]></action>
+			</edit>
+		</open>
+
 		<open src="includes/acp/acp_forums.php">
 			<edit>
 				<remove><![CDATA[$user->add_lang('mods/info_acp_recenttopics');]]></remove>

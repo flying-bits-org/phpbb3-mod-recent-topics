@@ -71,6 +71,13 @@ $versions = array(
 
 	// Version 1.0.5
 	'1.0.5'	=> array(),
+
+	// Version 1.0.6
+	'1.0.6'	=> array(
+		'config_add' => array(
+			array('rt_parents', 1),
+		),
+	),
 );
 
 // Include the UMIL Auto file and everything else will be handled automatically.

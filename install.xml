@@ -46,6 +46,7 @@
 				<date>20YY-MM-DD</date>
 				<rev-version>1.0.6</rev-version>
 				<changelog lang="en">
+					<change><![CDATA[[Feature] Add option to display parent forums in recent topics. (Bug #683)]]></change>
 					<change><![CDATA[[Feature] Add anchor to pagination links, so you don't need to scroll manually. (Bug #663)]]></change>
 				</changelog>
 			</entry>
@@ -133,7 +134,7 @@
 	{
 		include($phpbb_root_path . 'includes/functions_recenttopics.' . $phpEx);
 	}
-	display_recent_topics($config['rt_number'], $config['rt_page_number'], $config['rt_anti_topics'], 'recent_topics', request_var('f', 0), true);
+	display_recent_topics($config['rt_number'], $config['rt_page_number'], $config['rt_anti_topics'], 'recent_topics', request_var('f', 0), true, $config['rt_parents']);
 }]]></action>
 			</edit>
 		</open>

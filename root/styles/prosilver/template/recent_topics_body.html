@@ -36,7 +36,7 @@
 					<!-- IF recent_topics.S_TOPIC_REPORTED --><a href="{recent_topics.U_MCP_REPORT}">{REPORTED_IMG}</a><!-- ENDIF --><br />
 					<!-- IF recent_topics.PAGINATION --><strong class="pagination"><span>{recent_topics.PAGINATION}</span></strong><!-- ENDIF -->
 					<!-- IF recent_topics.ATTACH_ICON_IMG -->{recent_topics.ATTACH_ICON_IMG} <!-- ENDIF -->{L_POST_BY_AUTHOR} {recent_topics.TOPIC_AUTHOR_FULL} &raquo; {recent_topics.FIRST_POST_TIME}
-					<!-- IF recent_topics.U_VIEW_FORUM and recent_topics.FORUM_NAME --><br />{L_IN} <a href="{recent_topics.U_VIEW_FORUM}" style="font-weight: bold;">{recent_topics.FORUM_NAME}</a><!-- ENDIF -->
+					<!-- IF recent_topics.U_VIEW_FORUM and recent_topics.FORUM_NAME --><br />{L_IN} <!-- BEGIN parent_forums --><a href="{recent_topics.parent_forums.U_VIEW_FORUM}" style="font-weight: bold;">{recent_topics.parent_forums.FORUM_NAME}</a> &raquo; <!-- END parent_forums --><a href="{recent_topics.U_VIEW_FORUM}" style="font-weight: bold;">{recent_topics.FORUM_NAME}</a><!-- ENDIF -->
 				</dt>
 				<dd class="posts">{recent_topics.REPLIES} <dfn>{L_REPLIES}</dfn></dd>
 				<dd class="views">{recent_topics.VIEWS} <dfn>{L_VIEWS}</dfn></dd>
