@@ -460,6 +460,12 @@ function display_recent_topics($topics_per_page, $num_pages, $excluded_topics, $
 	foreach ($url_params as $param)
 	{
 		if (!$param) continue;
+		if (strpos($param, '=') === false)
+		{
+			// Fix MSSTI Advanced BBCode MOD
+			$append_params[$param] = '1';
+			continue;
+		}
 		list($name, $value) = explode('=', $param);
 		if ($name != $tpl_loopname . '_start')
 		{
