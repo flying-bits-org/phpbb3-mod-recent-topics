@@ -105,7 +105,7 @@ function recent_topics_generate_pagination($base_url, $num_items, $per_page, $st
 	return $page_string;
 }
 
-function display_recent_topics($topics_per_page, $num_pages, $excluded_topics, $tpl_loopname = 'recenttopicrow', $spec_forum_id = 0, $include_subforums = true)
+function display_recent_topics($topics_per_page, $num_pages, $excluded_topics, $tpl_loopname = 'recenttopicrow', $spec_forum_id = 0, $include_subforums = true, $display_parent_forums = true)
 {
 	global $auth, $cache, $config, $db, $template, $user;
 	global $phpbb_root_path, $phpEx;
@@ -226,7 +226,7 @@ function display_recent_topics($topics_per_page, $num_pages, $excluded_topics, $
 	}
 
 	// Get the allowed topics
-	$sql = $db->sql_build_query('SELECT', array(
+	$sql_query_array = array(
 		'SELECT'	=> 't.forum_id, t.topic_id, t.topic_type, t.icon_id, tt.mark_time, ft.mark_time as f_mark_time',
 		'FROM'		=> array(TOPICS_TABLE => 't'),
 		'LEFT_JOIN'	=> array(
@@ -250,7 +250,8 @@ function display_recent_topics($topics_per_page, $num_pages, $excluded_topics, $
 			AND (' . $db->sql_in_set('t.forum_id', $m_approve_ids, false, true) . '
 				OR t.topic_approved = 1)',
 		'ORDER_BY'	=> 't.topic_last_post_time DESC',
-	));
+	);
+	$sql = $db->sql_build_query('SELECT', $sql_query_array);
 	$result = $db->sql_query_limit($sql, $total_limit);
 
 	$forums = $ga_topic_ids = $topic_ids = array();
@@ -317,7 +318,7 @@ function display_recent_topics($topics_per_page, $num_pages, $excluded_topics, $
 	}
 
 	// Now only pull the data of the requested topics
-	$sql = $db->sql_build_query('SELECT', array(
+	$sql_query_array = array(
 		'SELECT'	=> 't.*, tp.topic_posted, f.forum_name',
 		'FROM'		=> array(TOPICS_TABLE => 't'),
 		'LEFT_JOIN'	=> array(
@@ -332,7 +333,14 @@ function display_recent_topics($topics_per_page, $num_pages, $excluded_topics, $
 		),
 		'WHERE'		=> $db->sql_in_set('t.topic_id', $topic_ids),
 		'ORDER_BY'	=> 't.topic_last_post_time DESC',
-	));
+	);
+
+	if ($display_parent_forums)
+	{
+		$sql_query_array['SELECT'] .= ', f.parent_id, f.forum_parents, f.left_id, f.right_id';
+	}
+
+	$sql = $db->sql_build_query('SELECT', $sql_query_array);
 	$result = $db->sql_query_limit($sql, $topics_per_page);
 
 	$topic_icons = array();
@@ -429,6 +437,20 @@ function display_recent_topics($topics_per_page, $num_pages, $excluded_topics, $
 			'U_MCP_REPORT'			=> append_sid("{$phpbb_root_path}mcp.$phpEx", 'i=reports&amp;mode=reports&amp;f=' . $forum_id . '&amp;t=' . $topic_id, true, $user->session_id),
 			'U_MCP_QUEUE'			=> $u_mcp_queue,
 		));
+
+		if ($display_parent_forums)
+		{
+			$forum_parents = get_forum_parents($row);
+
+			foreach ($forum_parents as $parent_id => $data)
+			{
+				$template->assign_block_vars($tpl_loopname . '.parent_forums', array(
+					'FORUM_ID'			=> $parent_id,
+					'FORUM_NAME'		=> $data[0],
+					'U_VIEW_FORUM'		=> append_sid("{$phpbb_root_path}viewforum.$phpEx", 'f=' . $parent_id),
+				));
+			}
+		}
 	}
 	$db->sql_freeresult($result);
 

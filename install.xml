@@ -46,6 +46,7 @@
 				<date>20YY-MM-DD</date>
 				<rev-version>1.0.6</rev-version>
 				<changelog lang="en">
+					<change><![CDATA[[Feature] Add option to display parent forums in recent topics. (Bug #683)]]></change>
 					<change><![CDATA[[Feature] Add anchor to pagination links, so you don't need to scroll manually. (Bug #663)]]></change>
 				</changelog>
 			</entry>
