@@ -251,6 +251,13 @@ function display_recent_topics($topics_per_page, $num_pages, $excluded_topics, $
 				OR t.topic_approved = 1)',
 		'ORDER_BY'	=> 't.topic_last_post_time DESC',
 	);
+
+	// Is a soft delete MOD installed?
+	if (file_exists("{$phpbb_root_path}includes/mods/soft_delete.$phpEx"))
+	{
+		$sql_query_array['WHERE'] .= ' AND topic_deleted = 0';
+	}
+
 	$sql = $db->sql_build_query('SELECT', $sql_query_array);
 	$result = $db->sql_query_limit($sql, $total_limit);
 

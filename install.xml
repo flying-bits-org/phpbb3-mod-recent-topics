@@ -46,7 +46,8 @@
 				<date>20YY-MM-DD</date>
 				<rev-version>1.0.6</rev-version>
 				<changelog lang="en">
-					<change><![CDATA[[Fix] Undefined offset error, when ABBC by MSSTI is installed. (Bug #805)]]></change>
+					<change><![CDATA[[Fix] Conflict with “Soft Delete” by EXreaction: Don’t display deleted topics (Bug #761)]]></change>
+					<change><![CDATA[[Fix] Conflict with “ABBC” by MSSTI: Fix undefined offset error (Bug #805)]]></change>
 
 					<change><![CDATA[[Feature] Add option to display parent forums in recent topics. (Bug #683)]]></change>
 					<change><![CDATA[[Feature] Add anchor to pagination links, so you don't need to scroll manually. (Bug #663)]]></change>
