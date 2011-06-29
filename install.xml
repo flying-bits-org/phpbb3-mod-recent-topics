@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <?xml-stylesheet type="text/xsl" href="modx.prosilver.en.xsl"?>
 <!--For security purposes, please check: http://www.phpbb.com/mods/ for the latest version of this MOD. Although MODs are checked before being allowed in the MODs Database there is no guarantee that there are no security problems within the MOD. No support will be given for MODs not found within the MODs Database which can be found at http://www.phpbb.com/mods/-->
-<mod xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.phpbb.com/mods/xml/modx-1.2.2.xsd">
+<mod xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.phpbb.com/mods/xml/modx-1.2.5.xsd">
 	<header>
 		<license>http://opensource.org/licenses/gpl-license.php GNU General Public License v2</license>
 
-		<title lang="en">NV recent topics</title>
 		<title lang="de">NV recent topics</title>
+		<title lang="en">NV recent topics</title>
 
-		<description lang="en"><![CDATA[Adds a list with a number of recent topics to the index.php]]></description>
 		<description lang="de"><![CDATA[Fügt eine Liste mit einer einstellbaren Anzahl aus Themen auf die index.php.]]></description>
+		<description lang="en"><![CDATA[Adds a list with a number of recent topics to the index.php]]></description>
 
-		<author-notes lang="en"><![CDATA[i hope you get it installed, otherwise you can ask for help on phpbb.de and phpbb.com]]></author-notes>
 		<author-notes lang="de"><![CDATA[Ich hoffe ihr kommt mit dem MOD klar. Wenn nicht, könnt ihr auf phpbb.de oder phpbb.com eure Fragen stellen.]]></author-notes>
+		<author-notes lang="en"><![CDATA[i hope you get it installed, otherwise you can ask for help on phpbb.de and phpbb.com]]></author-notes>
 
 		<author-group>
 			<author>
@@ -29,7 +29,7 @@
 		<installation>
 			<level>easy</level>
 			<time>300</time>
-			<target-version>3.0.5</target-version>
+			<target-version>3.0.9</target-version>
 		</installation>
 
 		<link-group>
@@ -39,8 +39,6 @@
 			<link type="language" lang="en" href="contrib/de.xml">Manual for German Language-set</link>
 			<link type="template" lang="de" href="contrib/subsilver2.xml">Anleitung für das Style subsilver2</link>
 			<link type="template" lang="en" href="contrib/subsilver2.xml">Manual for subsilver2 Style</link>
-			<link type="parent" lang="de" href="contrib/Addons/add_any_page/install.xml">Addon: Zu beliebiger Seite hinzufügen</link>
-			<link type="parent" lang="en" href="contrib/Addons/add_any_page/install.xml">Addon: Add to any Page</link>
 		</link-group>
 
 		<history>
@@ -134,8 +132,7 @@
 
 		<open src="adm/style/acp_forums.html">
 			<edit>
-				<find><![CDATA[		<dl>
-			<dt><label for="topics_per_page">{L_FORUM_TOPICS_PAGE}:</label><br /><span>{L_FORUM_TOPICS_PAGE_EXPLAIN}</span></dt>
+				<find><![CDATA[			<dt><label for="topics_per_page">{L_FORUM_TOPICS_PAGE}:</label><br /><span>{L_FORUM_TOPICS_PAGE_EXPLAIN}</span></dt>
 			<dd><input type="text" id="topics_per_page" name="topics_per_page" value="{TOPICS_PER_PAGE}" size="4" maxlength="4" /></dd>
 		</dl>]]></find>
 				<action type="after-add"><![CDATA[		<dl>
@@ -148,8 +145,8 @@
 
 		<open src="includes/acp/acp_forums.php">
 			<edit>
-				<find><![CDATA[class acp_forums]]></find>
-				<action type="before-add"><![CDATA[$user->add_lang('mods/info_acp_recenttopics');]]></action>
+				<find><![CDATA[$user->add_lang('acp/forums');]]></find>
+				<action type="after-add"><![CDATA[$user->add_lang('mods/info_acp_recenttopics');]]></action>
 			</edit>
 			<edit>
 				<find><![CDATA['forum_topics_per_page'	=> request_var('topics_per_page', 0),]]></find>
@@ -172,7 +169,7 @@
 			</edit>
 		</open>
 
-		<diy-instructions lang="en"><![CDATA[Browse to install/index.php and run the installer]]></diy-instructions>
 		<diy-instructions lang="de"><![CDATA[install/index.php aufrufen und ausführen]]></diy-instructions>
+		<diy-instructions lang="en"><![CDATA[Browse to install/index.php and run the installer]]></diy-instructions>
 	</action-group>
 </mod>

@@ -19,51 +19,29 @@
 				<realname>Joas Schilling</realname>
 				<email>nickvergessen@gmx.de</email>
 				<username>nickvergessen</username>
-				<homepage>http://www.flying-bits.org</homepage>
+				<homepage>http://www.flying-bits.org/</homepage>
 				<contributions />
 			</author>
 		</author-group>
 
-		<mod-version>1.0.5</mod-version>
+		<mod-version>1.0.6</mod-version>
 
 		<installation>
 			<level>easy</level>
-			<time>120</time>
-			<target-version>3.0.5</target-version>
+			<time>300</time>
+			<target-version>3.0.9</target-version>
 		</installation>
 
 		<link-group>
-			<link type="parent" lang="de" href="../../install.xml">Installations-Anleitung</link>
-			<link type="parent" lang="en" href="../../install.xml">Install</link>
+			<link type="parent" lang="de" href="../update.xml">Update-Anleitung</link>
+			<link type="parent" lang="en" href="../update.xml">Update manual</link>
 		</link-group>
 	</header>
 
 	<action-group>
 		<copy>
-			<file from="root/adm/mods/nv_recenttopics_version.php" to="adm/mods/nv_recenttopics_version.php" />
-			<file from="root/adm/style/acp_recenttopics.html" to="adm/style/acp_recenttopics.html" />
-			<file from="root/includes/functions_recenttopics.php" to="includes/functions_recenttopics.php" />
-			<file from="root/includes/acp/acp_recenttopics.php" to="includes/acp/acp_recenttopics.php" />
-			<file from="root/includes/acp/info/acp_recenttopics.php" to="includes/acp/info/acp_recenttopics.php" />
-			<file from="root/install/*.*" to="install/*.*" />
-			<file from="root/language/en/mods/*.*" to="language/en/mods/*.*" />
-			<file from="root/styles/prosilver/template/recent_topics_body.html" to="styles/prosilver/template/recent_topics_body.html" />
-			<file from="root/umil/*.*" to="umil/*.*" />
+			<file from="root/styles/subsilver2/template/recent_topics_body.html" to="styles/subsilver2/template/recent_topics_body.html" />
 		</copy>
-
-		<open src="index.php">
-			<edit>
-				<find><![CDATA[	display_recent_topics($config['rt_number'], $config['rt_page_number'], $config['rt_anti_topics']);]]></find>
-				<action type="replace-with"><![CDATA[display_recent_topics($config['rt_number'], $config['rt_page_number'], $config['rt_anti_topics'], 'recent_topics', request_var('f', 0), true);]]></action>
-			</edit>
-		</open>
-
-		<open src="styles/prosilver/template/index_body.html">
-			<edit>
-				<find><![CDATA[<!-- IF RT_DISPLAY --><!-- INCLUDE recent_topics_body.html --><!-- ENDIF -->]]></find>
-				<action type="replace-with"><![CDATA[<!-- IF RECENT_TOPICS_DISPLAY --><!-- INCLUDE recent_topics_body.html --><!-- ENDIF -->]]></action>
-			</edit>
-		</open>
 
 		<diy-instructions lang="de"><![CDATA[install/index.php aufrufen und ausführen]]></diy-instructions>
 		<diy-instructions lang="en"><![CDATA[Browse to install/index.php and run the installer]]></diy-instructions>
