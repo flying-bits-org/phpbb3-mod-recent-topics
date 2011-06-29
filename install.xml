@@ -24,7 +24,7 @@
 			</author>
 		</author-group>
 
-		<mod-version>1.0.5</mod-version>
+		<mod-version>1.0.6</mod-version>
 
 		<installation>
 			<level>easy</level>
@@ -33,8 +33,8 @@
 		</installation>
 
 		<link-group>
-			<link type="parent" lang="de" href="contrib/update_1_0_4_to_1_0_5/update.xml">Update von 1.0.4 auf 1.0.5</link>
-			<link type="parent" lang="en" href="contrib/update_1_0_4_to_1_0_5/update.xml">Update from 1.0.4 to 1.0.5</link>
+			<link type="parent" lang="de" href="contrib/update_1_0_5_to_1_0_6/update.xml">Update von 1.0.5 auf 1.0.6</link>
+			<link type="parent" lang="en" href="contrib/update_1_0_5_to_1_0_6/update.xml">Update from 1.0.5 to 1.0.6</link>
 			<link type="language" lang="de" href="contrib/de.xml">Anleitung für das deutsche Sprachpaket</link>
 			<link type="language" lang="en" href="contrib/de.xml">Manual for German Language-set</link>
 			<link type="template" lang="de" href="contrib/subsilver2.xml">Anleitung für das Style subsilver2</link>
@@ -43,7 +43,7 @@
 
 		<history>
 			<entry>
-				<date>20YY-MM-DD</date>
+				<date>2011-06-29</date>
 				<rev-version>1.0.6</rev-version>
 				<changelog lang="en">
 					<change><![CDATA[[Fix] Conflict with “Soft Delete” by EXreaction: Don’t display deleted topics (Bug #761)]]></change>

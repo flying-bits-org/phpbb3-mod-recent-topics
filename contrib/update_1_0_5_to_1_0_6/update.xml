@@ -35,6 +35,8 @@
 		<link-group>
 			<link type="parent" lang="de" href="../../install.xml">Installations-Anleitung</link>
 			<link type="parent" lang="en" href="../../install.xml">Install</link>
+			<link type="template" lang="de" href="contrib/subsilver2.xml">Anleitung für das Style subsilver2</link>
+			<link type="template" lang="en" href="contrib/subsilver2.xml">Manual for subsilver2 Style</link>
 		</link-group>
 	</header>
 
