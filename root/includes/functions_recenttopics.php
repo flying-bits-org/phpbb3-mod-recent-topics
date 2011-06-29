@@ -22,12 +22,10 @@ if (!function_exists('display_forums') || !function_exists('topic_status'))
 	include($phpbb_root_path . 'includes/functions_display.' . $phpEx);
 }
 
-$user->add_lang('mods/info_acp_recenttopics');
-
 /**
 * Since #48835 is a will not fix, we copy the function and make it work, else it is just a simple cut'n'paste
 */
-function recent_topics_generate_pagination($base_url, $num_items, $per_page, $start_item, $add_prevnext_text = false, $tpl_prefix = '', $start_item_name = '')
+function recent_topics_generate_pagination($base_url, $num_items, $per_page, $start_item, $add_prevnext_text = false, $tpl_prefix = '', $start_item_name = '', $anchor = '')
 {
 	global $template, $user;
 
@@ -45,7 +43,7 @@ function recent_topics_generate_pagination($base_url, $num_items, $per_page, $st
 	$on_page = floor($start_item / $per_page) + 1;
 	$url_delim = (strpos($base_url, '?') === false) ? '?' : '&amp;';
 
-	$page_string = ($on_page == 1) ? '<strong>1</strong>' : '<a href="' . $base_url . '">1</a>';
+	$page_string = ($on_page == 1) ? '<strong>1</strong>' : '<a href="' . $base_url . (($anchor) ? '#' . $anchor : '') . '">1</a>';
 
 	if ($total_pages > 5)
 	{
@@ -56,7 +54,7 @@ function recent_topics_generate_pagination($base_url, $num_items, $per_page, $st
 
 		for ($i = $start_cnt + 1; $i < $end_cnt; $i++)
 		{
-			$page_string .= ($i == $on_page) ? '<strong>' . $i . '</strong>' : '<a href="' . $base_url . "{$url_delim}{$start_item_name}=" . (($i - 1) * $per_page) . '">' . $i . '</a>';
+			$page_string .= ($i == $on_page) ? '<strong>' . $i . '</strong>' : '<a href="' . $base_url . "{$url_delim}{$start_item_name}=" . (($i - 1) * $per_page) . (($anchor) ? '#' . $anchor : '') . '">' . $i . '</a>';
 			if ($i < $end_cnt - 1)
 			{
 				$page_string .= $seperator;
@@ -71,7 +69,7 @@ function recent_topics_generate_pagination($base_url, $num_items, $per_page, $st
 
 		for ($i = 2; $i < $total_pages; $i++)
 		{
-			$page_string .= ($i == $on_page) ? '<strong>' . $i . '</strong>' : '<a href="' . $base_url . "{$url_delim}{$start_item_name}=" . (($i - 1) * $per_page) . '">' . $i . '</a>';
+			$page_string .= ($i == $on_page) ? '<strong>' . $i . '</strong>' : '<a href="' . $base_url . "{$url_delim}{$start_item_name}=" . (($i - 1) * $per_page) . (($anchor) ? '#' . $anchor : '') . '">' . $i . '</a>';
 			if ($i < $total_pages)
 			{
 				$page_string .= $seperator;
@@ -79,18 +77,18 @@ function recent_topics_generate_pagination($base_url, $num_items, $per_page, $st
 		}
 	}
 
-	$page_string .= ($on_page == $total_pages) ? '<strong>' . $total_pages . '</strong>' : '<a href="' . $base_url . "{$url_delim}{$start_item_name}=" . (($total_pages - 1) * $per_page) . '">' . $total_pages . '</a>';
+	$page_string .= ($on_page == $total_pages) ? '<strong>' . $total_pages . '</strong>' : '<a href="' . $base_url . "{$url_delim}{$start_item_name}=" . (($total_pages - 1) * $per_page) . (($anchor) ? '#' . $anchor : '') . '">' . $total_pages . '</a>';
 
 	if ($add_prevnext_text)
 	{
 		if ($on_page != 1)
 		{
-			$page_string = '<a href="' . $base_url . "{$url_delim}{$start_item_name}=" . (($on_page - 2) * $per_page) . '">' . $user->lang['PREVIOUS'] . '</a>&nbsp;&nbsp;' . $page_string;
+			$page_string = '<a href="' . $base_url . "{$url_delim}{$start_item_name}=" . (($on_page - 2) * $per_page) . (($anchor) ? '#' . $anchor : '') . '">' . $user->lang['PREVIOUS'] . '</a>&nbsp;&nbsp;' . $page_string;
 		}
 
 		if ($on_page != $total_pages)
 		{
-			$page_string .= '&nbsp;&nbsp;<a href="' . $base_url . "{$url_delim}{$start_item_name}=" . ($on_page * $per_page) . '">' . $user->lang['NEXT'] . '</a>';
+			$page_string .= '&nbsp;&nbsp;<a href="' . $base_url . "{$url_delim}{$start_item_name}=" . ($on_page * $per_page) . (($anchor) ? '#' . $anchor : '') . '">' . $user->lang['NEXT'] . '</a>';
 		}
 	}
 
@@ -111,6 +109,8 @@ function display_recent_topics($topics_per_page, $num_pages, $excluded_topics, $
 {
 	global $auth, $cache, $config, $db, $template, $user;
 	global $phpbb_root_path, $phpEx;
+
+	$user->add_lang('mods/info_acp_recenttopics');
 
 	/**
 	* Set some internal needed variables
@@ -451,7 +451,7 @@ function display_recent_topics($topics_per_page, $num_pages, $excluded_topics, $
 		'LAST_POST_IMG'			=> $user->img('icon_topic_latest', 'VIEW_LATEST_POST'),
 		strtoupper($tpl_loopname) . '_DISPLAY'		=> true,
 		strtoupper($tpl_loopname) . '_PAGE_NUMBER'	=> on_page($num_topics, $topics_per_page, $start),
-		strtoupper($tpl_loopname) . '_PAGINATION'	=> recent_topics_generate_pagination(append_sid($phpbb_root_path . $user->page['page_name'], $append_params), $num_topics, $topics_per_page, $start, false, strtoupper($tpl_loopname), $tpl_loopname . '_start'),
+		strtoupper($tpl_loopname) . '_PAGINATION'	=> recent_topics_generate_pagination(append_sid($phpbb_root_path . $user->page['page_name'], $append_params), $num_topics, $topics_per_page, $start, false, strtoupper($tpl_loopname), $tpl_loopname . '_start', $tpl_loopname),
 	));
 }
 
