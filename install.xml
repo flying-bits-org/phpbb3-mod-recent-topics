@@ -43,6 +43,14 @@
 
 		<history>
 			<entry>
+				<date>20YY-MM-DD</date>
+				<rev-version>1.0.6</rev-version>
+				<changelog lang="en">
+					<change><![CDATA[[Feature] Add anchor to pagination links, so you don't need to scroll manually. (Bug #663)]]></change>
+				</changelog>
+			</entry>
+
+			<entry>
 				<date>2009-08-03</date>
 				<rev-version>1.0.5</rev-version>
 				<changelog lang="en">
