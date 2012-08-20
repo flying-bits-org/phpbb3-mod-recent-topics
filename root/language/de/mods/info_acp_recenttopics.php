@@ -25,11 +25,11 @@ $lang = array_merge($lang, array(
 
 	'RT_CONFIG'							=> 'Konfiguration von aktuelle Themen',
 	'RT_ANTI_TOPICS'					=> 'ausgeschlossene Themen',
-	'RT_ANTI_TOPICS_EXP'				=> 'Mit “, ” trennen (Beispiel: “7, 9”)<br />Wenn kein Thema ausgeschlossen werden soll 1 eingeben. Wenn du 0 eingibst, werden soviele Seiten angezeigt, wie benötigt werden um alle Themen auszugeben.',
+	'RT_ANTI_TOPICS_EXP'				=> 'Mit “, ” trennen (Beispiel: “7, 9”)<br />Wenn kein Thema ausgeschlossen werden soll 0 eintragen.',
 	'RT_NUMBER'							=> 'aktuelle Themen',
 	'RT_NUMBER_EXP'						=> 'Anzahl der Themen die angezeigt werden',
 	'RT_PAGE_NUMBER'					=> 'aktuelle Themen Seitenanzahl',
-	'RT_PAGE_NUMBER_EXP'				=> 'Du kannst weiter aktuelle Themen mit einer kleinen Seitennavigation anzeigen lassen. Um das Feature zu deaktivieren einfach 0 eintragen.',
+	'RT_PAGE_NUMBER_EXP'				=> 'Du kannst weiter aktuelle Themen mit einer kleinen Seitennavigation anzeigen lassen. Um das Feature zu deaktivieren einfach “1” eintragen. Wenn du “0” eingibst, werden soviele Seiten angezeigt, wie benötigt werden um alle Themen auszugeben.',
 	'RT_PARENTS'						=> 'Übergeordnete Foren anzeigen',
 	'RT_SAVED'							=> 'Einstellungen gespeichert.',
 

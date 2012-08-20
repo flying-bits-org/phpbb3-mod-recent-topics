@@ -25,11 +25,11 @@ $lang = array_merge($lang, array(
 
 	'RT_CONFIG'							=> 'Configuration',
 	'RT_ANTI_TOPICS'					=> 'Excluded topics',
-	'RT_ANTI_TOPICS_EXP'				=> 'Seperated by “, ” (Example: “7, 9”)<br />If you don’t want to exclude a topic, just enter 0.',
+	'RT_ANTI_TOPICS_EXP'				=> 'Seperated by “, ” (Example: “7, 9”)<br />If you don’t want to exclude a topic, just enter “0”.',
 	'RT_NUMBER'							=> 'Recent topics',
 	'RT_NUMBER_EXP'						=> 'Number of topics displayed on the index.',
 	'RT_PAGE_NUMBER'					=> 'Recent topics pages',
-	'RT_PAGE_NUMBER_EXP'				=> 'You can display some more recent topics on a little pagination. Just enter 1 to disable this feature. If you enter 0 there will be so much pages as needed to display all topics.',
+	'RT_PAGE_NUMBER_EXP'				=> 'You can display some more recent topics on a little pagination. Just enter “1” to disable this feature. If you enter “0” there will be so much pages as needed to display all topics.',
 	'RT_PARENTS'						=> 'Display parent forums',
 	'RT_SAVED'							=> 'Saved adjustments.',
 
